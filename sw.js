@@ -2,12 +2,11 @@
    Offline support. Bump CACHE when you ship changes, or returning
    users keep getting the old version out of their cache. */
 
-const CACHE = "art-helper-v14";
+const CACHE = "art-helper-v15";
 
 const SHELL = [
   "./",
   "./index.html",
-  "./brand.js",
   "./manifest.json",
   "./icon-192.png",
   "./icon-512.png",
