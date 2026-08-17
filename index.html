@@ -9,7 +9,7 @@
 <link rel="manifest" href="./manifest.json">
 <link rel="icon" href="./icon-192.png" type="image/png">
 <link rel="apple-touch-icon" href="./icon-192.png">
-<title>Reference — Studio_AP</title>
+<title>Studio_AP Art Helper</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,400..700,0..100,0..1&family=Archivo:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -174,16 +174,18 @@ header,footer,#installRow{max-width:1500px;margin-left:auto;margin-right:auto;}
 
 /* ---------- brand ---------- */
 
-.wordmark{
+.lockup{
   font-family:var(--data);
-  font-size:10px;
+  font-size:0.52em;
   font-weight:500;
-  letter-spacing:0.3em;
+  letter-spacing:0.2em;
   text-transform:uppercase;
   color:var(--jade);
-  display:block;
-  margin-bottom:9px;
+  vertical-align:0.42em;
+  margin-right:0.24em;
 }
+
+header .titles h1{display:block;}
 
 header .titles{display:flex;flex-direction:column;}
 
@@ -529,9 +531,9 @@ input[type=range]::-moz-range-thumb{
 
 .val{
   font-family:var(--data);
-  font-size:12px;
+  font-size:11px;
   color:var(--ink-050);
-  min-width:34px;
+  min-width:74px;
   text-align:right;
 }
 
@@ -915,8 +917,7 @@ input[type=url]::placeholder{color:var(--ink-500);}
 
 <header>
   <div class="titles">
-    <span class="wordmark">Studio_AP</span>
-    <h1>Reference</h1>
+    <h1><span class="lockup">Studio_AP</span> Art Helper</h1>
   </div>
   <span class="sub">palette, value and grid, from one photo</span>
 </header>
@@ -1079,10 +1080,27 @@ input[type=url]::placeholder{color:var(--ink-500);}
         <label for="squint">Squint <button class="help" data-help="h-squint" aria-label="About squint">?</button></label>
         <span class="val mono" id="squintVal">off</span>
       </div>
-      <input type="range" id="squint" min="0" max="5" value="0" step="1">
+      <input type="range" id="squint" min="0" max="12" value="0" step="1">
       <div class="helpbox" id="h-squint" style="margin-top:9px">
         <p>Every painting teacher says "squint at it" — narrowing your eyes throws away detail and leaves the big masses and value relationships.</p>
         <p>Do it to your reference <em>and</em> to your own work. If the two blur into a similar arrangement of light and dark, you're on track, however rough the detail.</p>
+        <p>The low steps (<strong>soft</strong>) are the ones you'll use most &mdash; just enough to drop detail while shapes stay readable. Push to <strong>hard</strong> or <strong>masses</strong> when you want the picture reduced to a few big blocks of value, which is how you check composition.</p>
+      </div>
+
+      <div class="row" style="margin-top:13px">
+        <label for="sil">Silhouette <button class="help" data-help="h-sil" aria-label="About silhouette">?</button></label>
+        <span class="val mono" id="silVal">off</span>
+      </div>
+      <input type="range" id="sil" min="0" max="95" value="0" step="1">
+      <div class="row" style="margin-top:8px">
+        <label style="font-size:12px;color:var(--ink-500)">Cut point</label>
+        <button id="silInvert" style="flex:0 0 auto">Invert</button>
+      </div>
+      <div class="helpbox" id="h-sil" style="margin-top:9px">
+        <p>Collapses everything into two shapes: subject and not-subject. It's the oldest test in drawing — <strong>if the silhouette doesn't read, the drawing doesn't read</strong>, however good the interior detail is.</p>
+        <p>Use it on a pose. If you can't tell what the figure is doing from the black shape alone, the pose needs changing before you render anything.</p>
+        <p><strong>Drag the cut point around.</strong> There's no correct setting — moving it decides what counts as the shape, and finding where the subject separates cleanly from its background is itself the exercise.</p>
+        <p><strong>Turn Squint up first.</strong> Blurring before you threshold gives a cleaner, less speckled shape — the same reason painters squint before blocking in.</p>
       </div>
 
       <div class="row" style="margin-top:13px">
@@ -1160,7 +1178,7 @@ input[type=url]::placeholder{color:var(--ink-500);}
 </main>
 
 <div id="installRow">
-  <span>Install Reference for offline use</span>
+  <span>Install Art Helper for offline use</span>
   <button id="installBtn">Add to home screen</button>
 </div>
 
@@ -1682,7 +1700,7 @@ function paintGrid(ctx, w, h, lineWidth){
    the export — so what you see is what you get.
    ============================================================ */
 
-const FX = { flipH:false, flipV:false, squint:0, steps:0, isolate:null };
+const FX = { flipH:false, flipV:false, squint:0, steps:0, isolate:null, sil:0, silInvert:false };
 
 function renderImage(ctx, w, h, opt){
   opt = opt || {};
@@ -1694,10 +1712,13 @@ function renderImage(ctx, w, h, opt){
   const filters = [];
   if(value) filters.push("grayscale(1)");
   if(FX.squint){
-    // blur relative to image size, so squinting looks the same
-    // at any zoom or screen
-    const px = Math.max(1, (w * 0.006) * FX.squint);
-    filters.push("blur(" + px.toFixed(1) + "px)");
+    // Blur relative to image size, so squinting looks the same at any
+    // zoom or screen. The curve is deliberately not linear: the first
+    // steps are barely-there, because the useful range for checking a
+    // painting is a gentle softening, not a smear. The heavy end is
+    // still there for reducing a picture to pure masses.
+    const px = Math.max(0.4, w * 0.0012 * Math.pow(FX.squint, 1.2));
+    filters.push("blur(" + px.toFixed(2) + "px)");
   }
   ctx.filter = filters.length ? filters.join(" ") : "none";
 
@@ -1707,7 +1728,7 @@ function renderImage(ctx, w, h, opt){
   ctx.restore();
   ctx.filter = "none";
 
-  if(FX.steps > 1 || FX.isolate) postProcess(ctx, w, h, value);
+  if(FX.steps > 1 || FX.isolate || FX.sil) postProcess(ctx, w, h, value);
 }
 
 function postProcess(ctx, w, h, value){
@@ -1724,8 +1745,22 @@ function postProcess(ctx, w, h, value){
     ib = parseInt(iso.slice(5,7),16);
   }
 
+  const sil = FX.sil;
+  const silCut = sil ? sil / 100 * 255 : 0;
+
   for(let i=0;i<d.length;i+=4){
     let r=d[i], g=d[i+1], b=d[i+2];
+
+    if(sil){
+      // one moving threshold, everything either side of it goes
+      // flat. Where you put the cut IS the judgement — it decides
+      // what counts as the shape and what falls away.
+      const luma = 0.2126*r + 0.7152*g + 0.0722*b;
+      const on = FX.silInvert ? (luma > silCut) : (luma <= silCut);
+      r = g = b = on ? 12 : 243;
+      d[i]=r; d[i+1]=g; d[i+2]=b;
+      continue;      // silhouette supersedes the other passes
+    }
 
     if(steps){
       // quantise by *value*, not by channel. Posterising each
@@ -2233,7 +2268,24 @@ $("steps").addEventListener("input", e=>{
 
 $("squint").addEventListener("input", e=>{
   FX.squint = +e.target.value;
-  $("squintVal").textContent = FX.squint ? FX.squint : "off";
+  const words = FX.squint === 0 ? "off"
+    : FX.squint <= 3  ? FX.squint + " · soft"
+    : FX.squint <= 7  ? FX.squint + " · half"
+    : FX.squint <= 10 ? FX.squint + " · hard"
+    :                   FX.squint + " · masses";
+  $("squintVal").textContent = words;
+  draw();
+});
+
+$("sil").addEventListener("input", e=>{
+  FX.sil = +e.target.value;
+  $("silVal").textContent = FX.sil ? FX.sil + "%" : "off";
+  draw();
+});
+
+$("silInvert").addEventListener("click", ()=>{
+  FX.silInvert = !FX.silInvert;
+  $("silInvert").classList.toggle("on", FX.silInvert);
   draw();
 });
 
