@@ -154,6 +154,10 @@ main{
 
 main > .panel{align-self:start;}
 
+/* the stage sizes to its image, never to the column it sits in */
+.imagecol{display:flex;flex-direction:column;}
+.imagecol > #stage{flex:0 0 auto;}
+
 /* Desktop layout.
    Two columns from 1000px: image left, both panels stacked right.
    Three from 1500px: the palette gets a column of its own next to
@@ -164,11 +168,25 @@ main > .panel{align-self:start;}
   .imagecol{grid-column:1;grid-row:1 / span 2;}
   #palettePanel{grid-column:2;grid-row:1;}
   #controlPanel{grid-column:2;grid-row:2;}
+
+  /* The reference has to stay put. Every control to the right is a
+     judgement made against this image, so scrolling it off screen
+     turns them into guesswork.
+     Two things are needed: the column must stretch to the full row
+     height (otherwise there's no distance for a sticky child to
+     travel), and the stage pins inside it. */
+  .imagecol{align-self:stretch;}
+  #stage{
+    position:sticky;
+    top:var(--gap);
+    z-index:5;
+  }
+  #view{max-height:calc(100vh - 260px);width:auto;}
 }
 
 @media (min-width:1500px){
   main{grid-template-columns:minmax(0,1fr) 380px 380px;}
-  .imagecol{grid-column:1;grid-row:1;}
+  .imagecol{grid-column:1;grid-row:1;align-self:stretch;}
   #palettePanel{grid-column:2;grid-row:1;}
   #controlPanel{grid-column:3;grid-row:1;}
 }
@@ -1851,7 +1869,10 @@ function fitView(){
   // left a third of a large monitor empty.
   const wide = window.innerWidth >= 1000;
   const maxW = Math.max(160, Math.min(avail, wide ? 1400 : 900));
-  const maxH = Math.max(200, window.innerHeight - (wide ? 210 : 320));
+  // On desktop the stage is pinned, so the image must fit the viewport
+  // with room for the nav bar and judging-field controls beneath it —
+  // otherwise its own bottom scrolls out of reach.
+  const maxH = Math.max(200, window.innerHeight - (wide ? 300 : 320));
 
   const scale = Math.min(maxW/S.full.width, maxH/S.full.height, 1);
   view.width  = Math.round(S.full.width * scale);
