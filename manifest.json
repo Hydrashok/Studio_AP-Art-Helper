@@ -1,6 +1,6 @@
 {
-  "name": "Studio_AP Art Helper",
-  "short_name": "Art Helper",
+  "name": "KPA Art Helper by Studio_AP",
+  "short_name": "KPA Art Helper",
   "description": "Pull a painter's palette and a drawing grid from any reference photo. Works offline; images never leave your device.",
   "start_url": "./index.html",
   "scope": "./",

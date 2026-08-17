@@ -11,13 +11,13 @@
 <link rel="apple-touch-icon" href="./icon-192.png">
 <title>Art Helper</title>
 <script>window.BRAND = {
-  "title": "Studio_AP Art Helper",
-  "shortName": "Art Helper",
-  "heading": "<span class=\"lockup\">Studio_AP</span> Art Helper",
-  "byline": null,
-  "accent": "#4FA083",
-  "accentLit": "#7ACFAC",
-  "accentDeep": "#1C3B33"
+  "title": "KPA Art Helper \u2014 by Studio_AP",
+  "shortName": "KPA Art Helper",
+  "heading": "KPA Art Helper",
+  "byline": "by <span class=\"studio\">Studio_AP</span>",
+  "accent": "#ED7C6B",
+  "accentLit": "#F8AB9F",
+  "accentDeep": "#4E2A25"
 };</script>
 <script>
 /* Applied before the body parses, so the accent never flashes.
@@ -144,27 +144,49 @@ header .sub{
 
 main{
   display:grid;
-  grid-template-columns:minmax(0,1fr) 340px;
+  grid-template-columns:minmax(0,1fr);
   gap:var(--gap);
   padding:var(--gap);
   align-items:start;
-  /* on a wide monitor an unbounded layout strands the controls
-     a foot away from the image you're comparing them against */
-  max-width:1500px;
+  max-width:1900px;
   margin:0 auto;
 }
 
-/* the control rail follows you down a long page */
-@media (min-width:1100px){
-  main > .panel{
-    position:sticky;
-    top:var(--gap);
-    max-height:calc(100vh - var(--gap)*2);
-    overflow-y:auto;
-  }
+main > .panel{align-self:start;}
+
+/* Desktop layout.
+   Two columns from 1000px: image left, both panels stacked right.
+   Three from 1500px: the palette gets a column of its own next to
+   the image, which is where it belongs — you judge swatches against
+   the photo, and scrolling between them defeats that. */
+@media (min-width:1000px){
+  main{grid-template-columns:minmax(0,1fr) 380px;}
+  .imagecol{grid-column:1;grid-row:1 / span 2;}
+  #palettePanel{grid-column:2;grid-row:1;}
+  #controlPanel{grid-column:2;grid-row:2;}
 }
 
-header,footer,#installRow{max-width:1500px;margin-left:auto;margin-right:auto;}
+@media (min-width:1500px){
+  main{grid-template-columns:minmax(0,1fr) 380px 380px;}
+  .imagecol{grid-column:1;grid-row:1;}
+  #palettePanel{grid-column:2;grid-row:1;}
+  #controlPanel{grid-column:3;grid-row:1;}
+}
+
+/* Wide monitors: a 48-colour list reads far better in two columns
+   than as one very long ribbon. Band headings span both. */
+@media (min-width:1800px){
+  main{grid-template-columns:minmax(0,1fr) 560px 380px;}
+  #swatches.long{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:6px 10px;
+    align-items:start;
+  }
+  #swatches.long > .band{grid-column:1 / -1;}
+}
+
+header,footer,#installRow{max-width:1900px;margin-left:auto;margin-right:auto;}
 
 @media (max-width:940px){
   main{grid-template-columns:minmax(0,1fr);}
@@ -653,17 +675,19 @@ button.wide{width:100%;}
 /* A long palette scrolls at full row height rather than being
    compressed — squeezing rows costs legibility exactly when there
    is most to read. */
+/* No inner scroll. A scroll box inside a scrolling page swallows
+   the gesture on a phone, and capping the height means reading a
+   long palette through a letterbox. The list runs its full length
+   and the page scrolls instead. */
 #swatches.long{
-  max-height:min(62vh,560px);
-  overflow-y:auto;
-  padding-right:6px;
+  padding-right:0;
 }
 
 /* band headings stay visible while their group scrolls past */
 .band{
   position:sticky;
   top:0;
-  z-index:2;
+  z-index:3;
   font-family:var(--data);
   font-size:10px;
   font-weight:500;
@@ -680,11 +704,6 @@ button.wide{width:100%;}
 /* faint striping so the eye can track across a row */
 .sw.alt{background:var(--ink-900);}
 .sw.alt .meta{background:var(--ink-900);}
-#swatches.long::-webkit-scrollbar{width:8px;}
-#swatches.long::-webkit-scrollbar-track{background:var(--ink-900);border-radius:4px;}
-#swatches.long::-webkit-scrollbar-thumb{background:var(--ink-600);border-radius:4px;}
-#swatches.long::-webkit-scrollbar-thumb:hover{background:var(--ink-500);}
-#swatches.long{scrollbar-width:thin;scrollbar-color:var(--ink-600) var(--ink-900);}
 
 .sw{
   display:flex;
@@ -945,6 +964,34 @@ input[type=url]::placeholder{color:var(--ink-500);}
 
 /* ---------- toast ---------- */
 
+/* Shown only where there's a keyboard to use it. */
+#keyhelp{
+  display:none;
+  position:fixed;
+  right:var(--gap);
+  bottom:var(--gap);
+  z-index:40;
+  gap:14px;
+  align-items:center;
+  padding:9px 14px;
+  border:1px solid var(--ink-700);
+  border-radius:var(--radius);
+  background:var(--ink-800);
+  font-size:12px;
+  color:var(--ink-500);
+  box-shadow:0 8px 24px -10px rgba(0,0,0,.7);
+}
+#keyhelp .mono{
+  color:var(--jade);
+  font-size:11px;
+  letter-spacing:0.05em;
+  margin-right:4px;
+}
+@media (min-width:1000px) and (hover:hover){
+  #keyhelp{display:flex;}
+}
+#keyhelp.show{display:flex;}
+
 #toast{
   position:fixed;
   left:50%;bottom:26px;
@@ -987,7 +1034,7 @@ input[type=url]::placeholder{color:var(--ink-500);}
 
 <main>
   <!-- ============ LEFT: image ============ -->
-  <div>
+  <div class="imagecol">
     <section id="hero" class="grain">
       <blockquote>
         <p class="lead">Time is the currency of art.</p>
@@ -1052,36 +1099,7 @@ input[type=url]::placeholder{color:var(--ink-500);}
   </div>
 
   <!-- ============ RIGHT: controls ============ -->
-  <div class="panel">
-
-    <div class="section">
-      <h3>Palette <button class="help" data-help="h-palette" aria-label="About palette extraction">?</button></h3>
-      <div class="helpbox" id="h-palette">
-        <p>Most palette tools return the colours that cover the <em>most area</em> of a photo. For a painter that's the wrong question — it hands you five variations of mud and skips the one bright note that made you pick the reference.</p>
-        <p><strong>Tune for painting</strong> forces three things in: the darkest dark, the lightest light, and the strongest accent. Those are what a painting is built on.</p>
-        <p>Turn it off to see the difference. If the tuned version doesn't look more useful to you, trust your eye over the tool.</p>
-      </div>
-      <div class="row">
-        <label for="count">Colours</label>
-        <span class="val mono" id="countVal">6</span>
-      </div>
-      <input type="range" id="count" min="3" max="48" value="6" step="1">
-      <div class="btnset" style="margin-top:9px">
-        <button data-count="6">6</button>
-        <button data-count="12">12</button>
-        <button data-count="24">24</button>
-        <button data-count="48">48</button>
-      </div>
-      <div class="row" style="margin-top:12px">
-        <label class="toggle">
-          <input type="checkbox" id="tuned" checked>
-          Tune for painting
-        </label>
-      </div>
-      <p class="hint" id="tunedHint">Start around 5 or 6 to paint from. Go high — 24 or 48 — when you want a full swatch library off a reference rather than a working palette.</p>
-      <button class="wide" id="reextract" style="margin-top:11px">Re-extract</button>
-    </div>
-
+  <div class="panel" id="palettePanel">
     <div class="section">
       <h3>Colours <span class="mono" style="text-transform:none;letter-spacing:0" id="swCount"></span> <button class="help" data-help="h-colours" aria-label="About the colour list">?</button></h3>
       <div class="helpbox" id="h-colours">
@@ -1113,6 +1131,38 @@ input[type=url]::placeholder{color:var(--ink-500);}
         <button id="savePal">Save palette</button>
       </div>
     </div>
+  </div>
+
+  <div class="panel" id="controlPanel">
+
+    <div class="section">
+      <h3>Palette <button class="help" data-help="h-palette" aria-label="About palette extraction">?</button></h3>
+      <div class="helpbox" id="h-palette">
+        <p>Most palette tools return the colours that cover the <em>most area</em> of a photo. For a painter that's the wrong question — it hands you five variations of mud and skips the one bright note that made you pick the reference.</p>
+        <p><strong>Tune for painting</strong> forces three things in: the darkest dark, the lightest light, and the strongest accent. Those are what a painting is built on.</p>
+        <p>Turn it off to see the difference. If the tuned version doesn't look more useful to you, trust your eye over the tool.</p>
+      </div>
+      <div class="row">
+        <label for="count">Colours</label>
+        <span class="val mono" id="countVal">6</span>
+      </div>
+      <input type="range" id="count" min="3" max="48" value="6" step="1">
+      <div class="btnset" style="margin-top:9px">
+        <button data-count="6">6</button>
+        <button data-count="12">12</button>
+        <button data-count="24">24</button>
+        <button data-count="48">48</button>
+      </div>
+      <div class="row" style="margin-top:12px">
+        <label class="toggle">
+          <input type="checkbox" id="tuned" checked>
+          Tune for painting
+        </label>
+      </div>
+      <p class="hint" id="tunedHint">Start around 5 or 6 to paint from. Go high — 24 or 48 — when you want a full swatch library off a reference rather than a working palette.</p>
+      <button class="wide" id="reextract" style="margin-top:11px">Re-extract</button>
+    </div>
+
 
     <div class="section">
       <h3>Value scale <button class="help" data-help="h-value" aria-label="About the value scale">?</button></h3>
@@ -1304,6 +1354,14 @@ input[type=url]::placeholder{color:var(--ink-500);}
 </div>
 
 <div id="dropveil">Drop to add a reference</div>
+
+<div id="keyhelp">
+  <span class="mono">G</span> grid
+  <span class="mono">V</span> value
+  <span class="mono">M</span> mirror
+  <span class="mono">F</span> fullscreen
+  <span class="mono">&larr; &rarr;</span> references
+</div>
 
 <div id="toast" role="status" aria-live="polite"></div>
 <input type="file" id="importInput" accept="application/json,.json" class="vh">
@@ -1789,8 +1847,11 @@ function fitView(){
   const view = $("view");
   const wrap = $("canvasWrap");
   const avail = wrap.parentElement.clientWidth - 52;
-  const maxW = Math.max(160, Math.min(avail, 900));
-  const maxH = Math.max(200, window.innerHeight - 320);
+  // A desktop window is tall as well as wide; the old 900px ceiling
+  // left a third of a large monitor empty.
+  const wide = window.innerWidth >= 1000;
+  const maxW = Math.max(160, Math.min(avail, wide ? 1400 : 900));
+  const maxH = Math.max(200, window.innerHeight - (wide ? 210 : 320));
 
   const scale = Math.min(maxW/S.full.width, maxH/S.full.height, 1);
   view.width  = Math.round(S.full.width * scale);
@@ -2282,9 +2343,31 @@ $("fsPrev").addEventListener("click", ev=>{ ev.stopPropagation(); step(-1); });
 $("fsNext").addEventListener("click", ev=>{ ev.stopPropagation(); step(1); });
 
 document.addEventListener("keydown", ev=>{
-  if(ev.target && /INPUT|TEXTAREA/.test(ev.target.tagName)) return;
-  if(ev.key === "ArrowLeft")  step(-1);
-  if(ev.key === "ArrowRight") step(1);
+  if(ev.target && /INPUT|TEXTAREA|SELECT/.test(ev.target.tagName)) return;
+  if(ev.metaKey || ev.ctrlKey || ev.altKey) return;
+
+  switch(ev.key){
+    case "ArrowLeft":  step(-1); break;
+    case "ArrowRight": step(1);  break;
+
+    case "g": case "G":
+      $("gridon").checked = !$("gridon").checked;
+      S.gridOn = $("gridon").checked; draw(); break;
+
+    case "v": case "V":
+      $("valueview").checked = !$("valueview").checked;
+      S.valueView = $("valueview").checked; draw(); break;
+
+    case "f": case "F":
+      FS.open ? fsClose() : fsOpen(); break;
+
+    case "m": case "M":
+      FX.flipH = !FX.flipH;
+      $("flipH").classList.toggle("on", FX.flipH); draw(); break;
+
+    case "?":
+      $("keyhelp").classList.toggle("show"); break;
+  }
 });
 
 // load from a link
