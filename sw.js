@@ -2,7 +2,7 @@
    Offline support. Bump CACHE when you ship changes, or returning
    users keep getting the old version out of their cache. */
 
-const CACHE = "art-helper-v10";
+const CACHE = "art-helper-v12";
 
 const SHELL = [
   "./",
