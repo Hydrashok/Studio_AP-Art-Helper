@@ -18,13 +18,15 @@
 (function(){
   var B = window.BRAND || {};
   document.title = B.title || "Art Helper";
-  var css = ":root{" +
-    "--jade:" + (B.accent || "#4FA083") + ";" +
-    "--jade-lit:" + (B.accentLit || "#7ACFAC") + ";" +
-    "--jade-deep:" + (B.accentDeep || "#1C3B33") + ";}";
-  var el = document.createElement("style");
-  el.textContent = css;
-  document.head.appendChild(el);
+  /* Set these as inline properties on the root element, NOT as an
+     injected stylesheet. An injected <style> lands before the app's
+     own <style> block and loses to it on document order — which
+     silently reverted every build to the fallback accent. Inline
+     custom properties beat any stylesheet rule. */
+  var r = document.documentElement;
+  r.style.setProperty("--jade",      B.accent     || "#4FA083");
+  r.style.setProperty("--jade-lit",  B.accentLit  || "#7ACFAC");
+  r.style.setProperty("--jade-deep", B.accentDeep || "#1C3B33");
 })();
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
