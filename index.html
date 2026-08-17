@@ -646,7 +646,7 @@ button.wide{width:100%;}
 
 /* ---------- swatches ---------- */
 
-#swatches{display:flex;flex-direction:column;gap:5px;}
+#swatches{display:flex;flex-direction:column;gap:6px;}
 
 /* a long palette becomes a scrollable, denser list rather than
    pushing every other control off the screen */
@@ -654,10 +654,32 @@ button.wide{width:100%;}
    compressed — squeezing rows costs legibility exactly when there
    is most to read. */
 #swatches.long{
-  max-height:min(58vh,520px);
+  max-height:min(62vh,560px);
   overflow-y:auto;
   padding-right:6px;
 }
+
+/* band headings stay visible while their group scrolls past */
+.band{
+  position:sticky;
+  top:0;
+  z-index:2;
+  font-family:var(--data);
+  font-size:10px;
+  font-weight:500;
+  letter-spacing:0.2em;
+  text-transform:uppercase;
+  color:var(--jade);
+  background:var(--ink-800);
+  padding:9px 2px 6px;
+  border-bottom:1px solid var(--ink-700);
+  margin-top:6px;
+}
+#swatches.long > .band:first-child{margin-top:0;}
+
+/* faint striping so the eye can track across a row */
+.sw.alt{background:var(--ink-900);}
+.sw.alt .meta{background:var(--ink-900);}
 #swatches.long::-webkit-scrollbar{width:8px;}
 #swatches.long::-webkit-scrollbar-track{background:var(--ink-900);border-radius:4px;}
 #swatches.long::-webkit-scrollbar-thumb{background:var(--ink-600);border-radius:4px;}
@@ -675,9 +697,10 @@ button.wide{width:100%;}
 }
 
 .sw .chip{
-  width:56px;
-  flex:0 0 56px;
+  width:66px;
+  flex:0 0 66px;
   cursor:pointer;
+  min-height:44px;
 }
 
 .sw .meta{
@@ -685,8 +708,8 @@ button.wide{width:100%;}
   display:flex;
   align-items:center;
   justify-content:space-between;
-  padding:7px 9px;
-  gap:6px;
+  padding:9px 11px;
+  gap:8px;
   min-width:0;
 }
 
@@ -1619,6 +1642,17 @@ function extract(){
    Rendering — swatches and value scale
    ============================================================ */
 
+/* Value bands, in the words a painter would use. Boundaries follow
+   the way value is normally taught — a compressed dark end, because
+   that is where the eye reads the most difference. */
+function valueBand(L){
+  if(L < 18) return "Darkest";
+  if(L < 38) return "Darks";
+  if(L < 62) return "Midtones";
+  if(L < 82) return "Lights";
+  return "Highlights";
+}
+
 function renderPalette(){
   const e = current();
   if(e) e.palette = S.palette;
@@ -1634,9 +1668,29 @@ function renderPalette(){
     return;
   }
 
+  // A long palette needs landmarks. The list is already sorted dark
+  // to light, so banding it by value gives something to navigate by
+  // and doubles as a reading of the palette's spread.
+  const banded = S.palette.length > 16;
+  let lastBand = null;
+  let stripe = false;
+
   S.palette.forEach((c, i) => {
+    if(banded){
+      const b = valueBand(c.L);
+      if(b !== lastBand){
+        const h = document.createElement("div");
+        h.className = "band";
+        h.textContent = b;
+        wrap.appendChild(h);
+        lastBand = b;
+        stripe = false;
+      }
+    }
+
     const row = document.createElement("div");
-    row.className = "sw";
+    row.className = "sw" + (banded && stripe ? " alt" : "");
+    stripe = !stripe;
 
     const chip = document.createElement("div");
     chip.className = "chip";
