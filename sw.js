@@ -1,8 +1,8 @@
-/* KPA Art Helper — by Studio_AP
+/* Studio_AP Art Helper
    Offline support. Bump CACHE when you ship changes, or returning
    users keep getting the old version out of their cache. */
 
-const CACHE = "kpa-art-helper-v11";
+const CACHE = "art-helper-v18";
 
 const SHELL = [
   "./",
