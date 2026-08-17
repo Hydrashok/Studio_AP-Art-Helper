@@ -9,7 +9,24 @@
 <link rel="manifest" href="./manifest.json">
 <link rel="icon" href="./icon-192.png" type="image/png">
 <link rel="apple-touch-icon" href="./icon-192.png">
-<title>Studio_AP Art Helper</title>
+<title>Art Helper</title>
+<script src="./brand.js"></script>
+<script>
+/* Applied before the body parses, so the accent never flashes.
+   Everything brand-specific lives in brand.js — this file is
+   identical across every build. */
+(function(){
+  var B = window.BRAND || {};
+  document.title = B.title || "Art Helper";
+  var css = ":root{" +
+    "--jade:" + (B.accent || "#4FA083") + ";" +
+    "--jade-lit:" + (B.accentLit || "#7ACFAC") + ";" +
+    "--jade-deep:" + (B.accentDeep || "#1C3B33") + ";}";
+  var el = document.createElement("style");
+  el.textContent = css;
+  document.head.appendChild(el);
+})();
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT,WONK@9..144,400..700,0..100,0..1&family=Archivo:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -23,14 +40,15 @@
   --ink-800:#1D1B18;
   --ink-700:#2A2724;
   --ink-600:#3B3733;
-  --ink-500:#6A645E;
+  --ink-500:#8D8781;
   --field-gray:#7E7E7E;   /* true neutral — the colour-judging field */
-  --ink-200:#B6B0A9;
-  --ink-100:#DBD6CF;
+  --ink-200:#C7C2BB;
+  --ink-100:#E5E1DB;
   --ink-050:#EFEDE8;
 
   /* Xenia jade. Confined to brand and interactive state — never
      placed beside the image, where it would bias colour reading. */
+  /* fallback only — brand.js overrides these before first paint */
   --jade:#4FA083;
   --jade-lit:#7ACFAC;
   --jade-deep:#1C3B33;
@@ -72,8 +90,8 @@ body{
   background:var(--ink-900);
   color:var(--ink-100);
   font-family:var(--ui);
-  font-size:14.5px;
-  line-height:1.5;
+  font-size:15.5px;
+  line-height:1.55;
   -webkit-font-smoothing:antialiased;
   text-rendering:optimizeLegibility;
 }
@@ -210,7 +228,7 @@ header .titles{display:flex;flex-direction:column;}
   width:62%;
   aspect-ratio:1;
   border-radius:50%;
-  background:radial-gradient(circle, rgba(79,160,131,.30) 0%, rgba(79,160,131,.09) 42%, transparent 68%);
+  background:radial-gradient(circle, color-mix(in srgb, var(--jade) 30%, transparent) 0%, color-mix(in srgb, var(--jade) 9%, transparent) 42%, transparent 68%);
   pointer-events:none;
   animation:breathe 13s ease-in-out infinite;
 }
@@ -476,7 +494,7 @@ footer .line{
 
 .section h3{
   font-family:var(--data);
-  font-size:10px;
+  font-size:10.5px;
   font-weight:500;
   text-transform:uppercase;
   letter-spacing:0.2em;
@@ -506,7 +524,7 @@ footer .line{
 }
 .row:last-child{margin-bottom:0;}
 
-label{font-size:13px;color:var(--ink-200);}
+label{font-size:13.5px;color:var(--ink-100);}
 
 input[type=range]{
   -webkit-appearance:none;
@@ -539,7 +557,7 @@ input[type=range]::-moz-range-thumb{
 
 button{
   font-family:var(--ui);
-  font-size:12.5px;
+  font-size:13px;
   font-weight:500;
   letter-spacing:0.005em;
   color:var(--ink-100);
@@ -565,14 +583,14 @@ button.wide{width:100%;}
 
 .toggle{
   display:flex;align-items:center;gap:9px;
-  font-size:13px;color:var(--ink-200);cursor:pointer;
+  font-size:13.5px;color:var(--ink-100);cursor:pointer;
 }
 .toggle input{accent-color:var(--jade);width:15px;height:15px;cursor:pointer;}
 
 .hint{
-  font-size:12px;
+  font-size:13px;
   color:var(--ink-500);
-  line-height:1.4;
+  line-height:1.5;
   margin:9px 0 0;
 }
 
@@ -601,8 +619,8 @@ button.wide{width:100%;}
 
 .helpbox{
   display:none;
-  font-size:12.5px;
-  line-height:1.52;
+  font-size:13.5px;
+  line-height:1.6;
   color:var(--ink-200);
   background:var(--ink-900);
   border-left:2px solid var(--jade);
@@ -622,16 +640,19 @@ button.wide{width:100%;}
 
 /* a long palette becomes a scrollable, denser list rather than
    pushing every other control off the screen */
+/* A long palette scrolls at full row height rather than being
+   compressed — squeezing rows costs legibility exactly when there
+   is most to read. */
 #swatches.long{
-  max-height:min(52vh,430px);
+  max-height:min(58vh,520px);
   overflow-y:auto;
-  padding-right:4px;
-  gap:3px;
+  padding-right:6px;
 }
-#swatches.long .chip{flex:0 0 42px;width:42px;}
-#swatches.long .meta{padding:4px 7px;}
-#swatches.long .hex{font-size:12px;}
-#swatches.long .find{padding:2px 4px;font-size:9px;}
+#swatches.long::-webkit-scrollbar{width:8px;}
+#swatches.long::-webkit-scrollbar-track{background:var(--ink-900);border-radius:4px;}
+#swatches.long::-webkit-scrollbar-thumb{background:var(--ink-600);border-radius:4px;}
+#swatches.long::-webkit-scrollbar-thumb:hover{background:var(--ink-500);}
+#swatches.long{scrollbar-width:thin;scrollbar-color:var(--ink-600) var(--ink-900);}
 
 .sw{
   display:flex;
@@ -661,7 +682,7 @@ button.wide{width:100%;}
 
 .sw .hex{
   font-family:var(--data);
-  font-size:12.5px;
+  font-size:13.5px;
   letter-spacing:0.02em;
   cursor:pointer;
   color:var(--ink-050);
@@ -765,7 +786,7 @@ button.wide{width:100%;}
 .saved .acts{display:flex;gap:4px;}
 .saved .acts button{padding:3px 6px;font-size:11px;}
 
-.empty{font-size:12px;color:var(--ink-500);}
+.empty{font-size:13px;color:var(--ink-500);}
 
 /* Inputs stay in the layout but invisible. `hidden` inputs get
    ignored for interaction in some browsers and inside sandboxed
@@ -874,7 +895,7 @@ input[type=url]::placeholder{color:var(--ink-500);}
   backdrop-filter:blur(6px);
 }
 #fsBar button:hover{background:rgba(46,50,54,.9);}
-#fsBar button.on{background:#4FA083;color:#151311;border-color:#4FA083;}
+#fsBar button.on{background:var(--jade);color:var(--ink-900);border-color:var(--jade);}
 
 #fsHint{
   position:fixed;
@@ -917,10 +938,19 @@ input[type=url]::placeholder{color:var(--ink-500);}
 
 <header>
   <div class="titles">
-    <h1><span class="lockup">Studio_AP</span> Art Helper</h1>
+    <h1 id="brandTitle"></h1>
+    <span class="byline" id="brandByline" style="display:none"></span>
   </div>
   <span class="sub">palette, value and grid, from one photo</span>
 </header>
+<script>
+(function(){
+  var B = window.BRAND || {};
+  document.getElementById("brandTitle").innerHTML = B.heading || "Art Helper";
+  var by = document.getElementById("brandByline");
+  if(B.byline){ by.innerHTML = B.byline; by.style.display = ""; }
+})();
+</script>
 
 <main>
   <!-- ============ LEFT: image ============ -->
@@ -1212,7 +1242,7 @@ input[type=url]::placeholder{color:var(--ink-500);}
 </main>
 
 <div id="installRow">
-  <span>Install Art Helper for offline use</span>
+  <span id="installText">Install for offline use</span>
   <button id="installBtn">Add to home screen</button>
 </div>
 
@@ -2665,6 +2695,12 @@ if("serviceWorker" in navigator){
     navigator.serviceWorker.register("./sw.js").catch(()=>{});
   });
 }
+
+(function(){
+  var B = window.BRAND || {};
+  var t = document.getElementById("installText");
+  if(t) t.textContent = "Install " + (B.shortName || "Art Helper") + " for offline use";
+})();
 
 let installEvent = null;
 
