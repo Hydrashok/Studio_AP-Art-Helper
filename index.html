@@ -1603,10 +1603,16 @@ input[type=url]::placeholder{color:var(--ink-500);}
       <div class="helpbox" id="h-adjust">
         <p>For fixing a bad photograph &mdash; an underexposed reference, a flat grey phone snap, a scan that lost its colour.</p>
         <p><strong>These all feed the palette.</strong> Unlike the study tools, correcting the image changes the colours that get extracted, because you're deciding this is what the subject really looked like.</p>
+        <p><strong>Auto-fix reads the photo and moves these sliders.</strong> It measures — midpoint, tonal range, colour cast, noise, clipping — and sets each control accordingly. Nothing is hidden and nothing is invented: it only adjusts what you could have adjusted yourself, and you can override any of it.</p>
         <p><strong>Start with white balance.</strong> It's the error you can't see &mdash; your eye corrected for the room's light while you were standing in it, but the camera didn't. Every colour in a warm-lit photo is warm, and no other slider fixes that.</p>
         <p><strong>Vibrancy is not saturation.</strong> Saturation scales every colour equally and blows out the ones already strong. Vibrancy pushes the dull colours hardest, so skin and skies survive it.</p>
+        <p><strong>Noise reduction earns its place here.</strong> Sensor speckle in the shadows creates clusters that were never in the scene, and drags the darkest-dark pick onto a stray noise pixel. Cleaning it up makes the palette more honest, not just the picture prettier.</p>
+        <p><strong>Highlight recovery has a hard limit.</strong> Where all three channels are pure white the data is simply gone — nothing can bring it back, and anything that claims to is inventing. Where only one or two channels clipped, the survivors still carry the hue and can be pulled back honestly. Turn on <em>Show clipped areas</em> to see which you're dealing with.</p>
         <p>Go gently. A photo pushed hard gives a palette that looks exciting on screen and garish on canvas.</p>
       </div>
+
+      <button class="wide" id="autoFix" style="margin-bottom:14px">Auto-fix this photo</button>
+      <p class="hint" style="margin-bottom:14px">Measures the photo and sets the sliders below. Everything it decides stays visible, so you can see what it did and change your mind.</p>
 
       <div class="subhead">White balance</div>
       <button class="wide" id="wbPick">Tap something neutral in the photo</button>
@@ -1656,6 +1662,26 @@ input[type=url]::placeholder{color:var(--ink-500);}
       </div>
       <input type="range" id="highlights" min="-100" max="60" value="0" step="1">
 
+      <div class="subhead" style="margin-top:16px">Repair</div>
+
+      <div class="row">
+        <label for="denoise">Noise reduction</label>
+        <span class="val mono" id="denoiseVal">0</span>
+      </div>
+      <input type="range" id="denoise" min="0" max="100" value="0" step="1">
+
+      <div class="row" style="margin-top:10px">
+        <label for="recover">Highlight recovery</label>
+        <span class="val mono" id="recoverVal">0</span>
+      </div>
+      <input type="range" id="recover" min="0" max="100" value="0" step="1">
+
+      <label class="toggle" style="margin-top:11px">
+        <input type="checkbox" id="clipWarn">
+        Show clipped areas
+      </label>
+      <p class="hint">Pink where the photo is pure white, blue where it's pure black. Those areas hold no information — any colour you pull from them is invented.</p>
+
       <div class="subhead" style="margin-top:16px">Colour</div>
 
       <div class="row">
@@ -1696,6 +1722,17 @@ input[type=url]::placeholder{color:var(--ink-500);}
         <p>Every painting teacher says "squint at it" — narrowing your eyes throws away detail and leaves the big masses and value relationships.</p>
         <p>Do it to your reference <em>and</em> to your own work. If the two blur into a similar arrangement of light and dark, you're on track, however rough the detail.</p>
         <p>The low steps (<strong>soft</strong>) are the ones you'll use most &mdash; just enough to drop detail while shapes stay readable. Push to <strong>hard</strong> or <strong>masses</strong> when you want the picture reduced to a few big blocks of value, which is how you check composition.</p>
+      </div>
+
+      <div class="row" style="margin-top:13px">
+        <label for="sharpen">Sharpen <button class="help" data-help="h-sharp" aria-label="About sharpening">?</button></label>
+        <span class="val mono" id="sharpenVal">off</span>
+      </div>
+      <input type="range" id="sharpen" min="0" max="100" value="0" step="1">
+      <div class="helpbox" id="h-sharp" style="margin-top:9px">
+        <p>Lifts edge detail in a soft photograph, for when you're trying to read exactly where a form turns.</p>
+        <p><strong>This is a way of looking, not a correction — so it never touches the palette.</strong> Sharpening works by exaggerating the difference across every edge, which invents a bright and a dark pixel on either side of it. Those halos are colours that were never in the scene, and letting them into the extraction would put them in your palette.</p>
+        <p>The opposite of Squint. Use it to check detail, then squint again to check the whole reads.</p>
       </div>
 
       <div class="row" style="margin-top:13px">
@@ -2193,7 +2230,7 @@ function samplePixels(maxDim){
   const ctx = c.getContext("2d", {willReadFrequently:true});
   ctx.drawImage(S.full, 0, 0, sw, sh);
   const d = ctx.getImageData(0,0,sw,sh).data;
-  applyCorrections(d);
+  applyCorrections(d, sw, sh);
 
   const pts = [];
   for(let i=0;i<d.length;i+=4){
@@ -3099,7 +3136,8 @@ function paintGrid(ctx, w, h, lineWidth){
 
 const FX = { flipH:false, flipV:false, squint:0, steps:0, isolate:null, sil:0, silInvert:false,
              bright:0, contrast:0, gamma:0, shadows:0, highlights:0, sat:0, vib:0,
-             temp:0, tint:0, wb:[1,1,1] };
+             temp:0, tint:0, wb:[1,1,1],
+             denoise:0, recover:0, sharpen:0, clipWarn:false };
 
 /* Corrections vs study views — the distinction still holds.
    Everything below CORRECTS a photograph, so it feeds the palette.
@@ -3107,7 +3145,7 @@ const FX = { flipH:false, flipV:false, squint:0, steps:0, isolate:null, sil:0, s
    they never touch the extracted colours. */
 function correctionsActive(){
   return FX.bright || FX.contrast || FX.gamma || FX.shadows || FX.highlights ||
-         FX.sat || FX.vib || FX.temp || FX.tint ||
+         FX.sat || FX.vib || FX.temp || FX.tint || FX.denoise || FX.recover ||
          FX.wb[0] !== 1 || FX.wb[1] !== 1 || FX.wb[2] !== 1;
 }
 
@@ -3165,19 +3203,117 @@ function buildLUT(){
   return LUT;
 }
 
+/* ============================================================
+   Neighbourhood operations
+   These read surrounding pixels, so they can't fold into the
+   lookup table. They cost more, and they're only run when their
+   slider is off zero.
+   ============================================================ */
+
+/* Edge-preserving denoise.
+   A plain blur would smear the edges that carry the drawing. This
+   averages a pixel only with neighbours close to it in value, so
+   flat areas smooth out and edges stay put — the cheap cousin of a
+   bilateral filter.
+
+   This matters more here than in a photo editor: sensor speckle in
+   the shadows creates spurious clusters, and drags the darkest-dark
+   pick onto a noise pixel that was never really in the scene. */
+function denoise(d, w, h, strength){
+  if(!strength) return;
+  const amt = strength / 100;
+  const thresh = 10 + amt * 46;          // how different is "an edge"
+  const rad = amt > 0.6 ? 2 : 1;
+  const src = new Uint8ClampedArray(d);
+
+  for(let y=0; y<h; y++){
+    for(let x=0; x<w; x++){
+      const i = (y*w + x) * 4;
+      const cr = src[i], cg = src[i+1], cb = src[i+2];
+      let sr=0, sg=0, sb=0, n=0;
+
+      for(let dy=-rad; dy<=rad; dy++){
+        const yy = y+dy; if(yy<0 || yy>=h) continue;
+        for(let dx=-rad; dx<=rad; dx++){
+          const xx = x+dx; if(xx<0 || xx>=w) continue;
+          const j = (yy*w + xx) * 4;
+          if(Math.abs(src[j]-cr) + Math.abs(src[j+1]-cg) + Math.abs(src[j+2]-cb) > thresh*3) continue;
+          sr += src[j]; sg += src[j+1]; sb += src[j+2]; n++;
+        }
+      }
+      if(n){
+        d[i]   = cr + (sr/n - cr) * amt;
+        d[i+1] = cg + (sg/n - cg) * amt;
+        d[i+2] = cb + (sb/n - cb) * amt;
+      }
+    }
+  }
+}
+
+/* Unsharp mask.
+   Deliberately NOT a correction — see the note in the panel. It
+   invents overshoot pixels along every edge, and those halos would
+   end up in the palette as colours that were never in the scene. */
+function sharpen(d, w, h, amount){
+  if(!amount) return;
+  const amt = amount / 100 * 1.6;
+  const src = new Uint8ClampedArray(d);
+
+  for(let y=0; y<h; y++){
+    for(let x=0; x<w; x++){
+      const i = (y*w + x) * 4;
+      for(let c=0; c<3; c++){
+        let sum = 0, n = 0;
+        for(let dy=-1; dy<=1; dy++){
+          const yy = y+dy; if(yy<0 || yy>=h) continue;
+          for(let dx=-1; dx<=1; dx++){
+            const xx = x+dx; if(xx<0 || xx>=w) continue;
+            sum += src[(yy*w + xx)*4 + c]; n++;
+          }
+        }
+        const blur = sum / n;
+        d[i+c] = src[i+c] + (src[i+c] - blur) * amt;
+      }
+    }
+  }
+}
+
 /* Everything that depends on the pixel as a whole — tonal range and
    saturation — runs after the lookup. */
-function applyCorrections(d){
+function applyCorrections(d, w, h){
   if(!correctionsActive()) return;
+
+  // denoise first: everything downstream, including the palette,
+  // should see the cleaned pixels
+  if(FX.denoise && w && h) denoise(d, w, h, FX.denoise);
+
   const lut = buildLUT();
 
   const sh = FX.shadows / 100;
   const hi = FX.highlights / 100;
   const sat = FX.sat / 100;
   const vib = FX.vib / 100;
+  const rec = FX.recover / 100;
 
   for(let i=0; i<d.length; i+=4){
     let r = lut[0][d[i]], g = lut[1][d[i+1]], b = lut[2][d[i+2]];
+
+    if(rec){
+      const mx = Math.max(r,g,b);
+      if(mx > 200){
+        const mn = Math.min(r,g,b);
+        // Where every channel is pinned at white there is nothing
+        // left to recover — the data is gone. Where only one or two
+        // clipped, the surviving channels still carry the hue, so
+        // pull the bright ones back toward them.
+        const dead = mn > 248;
+        const roll = (mx - 200) / 55;
+        const pull = rec * roll * (dead ? 0.35 : 1);
+        const t = mx - (mx - (dead ? mx*0.86 : mn + (mx-mn)*0.55)) * pull;
+        const k = mx > 0 ? t / mx : 1;
+        r *= k; g *= k; b *= k;
+      }
+    }
 
     if(sh || hi){
       const y = (0.2126*r + 0.7152*g + 0.0722*b) / 255;
@@ -3241,7 +3377,8 @@ function renderImage(ctx, w, h, opt){
   ctx.restore();
   ctx.filter = "none";
 
-  if(FX.steps > 1 || FX.isolate || FX.sil || correctionsActive()) postProcess(ctx, w, h, value);
+  if(FX.steps > 1 || FX.isolate || FX.sil || FX.sharpen || FX.clipWarn || correctionsActive())
+    postProcess(ctx, w, h, value);
 }
 
 function postProcess(ctx, w, h, value){
@@ -3258,7 +3395,7 @@ function postProcess(ctx, w, h, value){
     ib = parseInt(iso.slice(5,7),16);
   }
 
-  applyCorrections(d);
+  applyCorrections(d, w, h);
 
   const sil = FX.sil;
   const silCut = sil ? sil / 100 * 255 : 0;
@@ -3307,7 +3444,33 @@ function postProcess(ctx, w, h, value){
 
     d[i]=r; d[i+1]=g; d[i+2]=b;
   }
+
+  // View-only, after everything else. Sharpening never reaches the
+  // palette; the clipping warning is a diagnostic, not a change.
+  if(FX.sharpen) sharpen(d, w, h, FX.sharpen);
+
+  if(FX.clipWarn){
+    for(let i=0; i<d.length; i+=4){
+      const mx = Math.max(d[i],d[i+1],d[i+2]);
+      const mn = Math.min(d[i],d[i+1],d[i+2]);
+      if(mn >= 252){ d[i]=255; d[i+1]=40;  d[i+2]=90;  }   // blown
+      else if(mx <= 3){ d[i]=40; d[i+1]=170; d[i+2]=255; } // crushed
+    }
+  }
+
   ctx.putImageData(id, 0, 0);
+}
+
+/* Expensive passes (denoise, sharpen) run on every redraw, and a
+   slider drag fires far faster than they complete — so requests pile
+   up and the interface stutters. Coalescing to one redraw per frame
+   keeps dragging responsive: intermediate frames are simply skipped
+   rather than queued. */
+let DRAW_PENDING = false;
+function scheduleDraw(){
+  if(DRAW_PENDING) return;
+  DRAW_PENDING = true;
+  requestAnimationFrame(()=>{ DRAW_PENDING = false; draw(); });
 }
 
 function draw(){
@@ -4277,6 +4440,159 @@ function paintCropOverlay(ctx, w, h){
   ctx.restore();
 }
 
+/* ============================================================
+   Auto-fix
+   ------------------------------------------------------------
+   Reads the photograph and sets the sliders. Deliberately NOT a
+   hidden transform: everything it decides lands on a control you
+   can see and move, so you can tell what it did and disagree with
+   it. A button that silently "improves" a reference is the last
+   thing a colour tool should have.
+
+   It also stays on the device, and it never invents anything — it
+   only measures what is already in the pixels and adjusts the same
+   sliders you'd reach for yourself.
+   ============================================================ */
+
+function analyseImage(){
+  if(!S.full) return null;
+
+  const cap = 220;
+  const sc = Math.min(1, cap / Math.max(S.full.width, S.full.height));
+  const w = Math.max(1, Math.round(S.full.width * sc));
+  const h = Math.max(1, Math.round(S.full.height * sc));
+
+  const c = document.createElement("canvas");
+  c.width = w; c.height = h;
+  const ctx = c.getContext("2d", {willReadFrequently:true});
+  ctx.drawImage(S.full, 0, 0, w, h);          // raw pixels, uncorrected
+  const d = ctx.getImageData(0,0,w,h).data;
+
+  const lum = [];
+  let satSum = 0, n = 0;
+  let sumR = 0, sumG = 0, sumB = 0;
+  let clipHi = 0, clipLo = 0;
+  const neutrals = [];
+
+  for(let i=0; i<d.length; i+=4){
+    const r=d[i], g=d[i+1], b=d[i+2];
+    const y = 0.2126*r + 0.7152*g + 0.0722*b;
+    lum.push(y);
+    const mx = Math.max(r,g,b), mn = Math.min(r,g,b);
+    const sat = mx ? (mx-mn)/mx : 0;
+    satSum += sat; n++;
+    sumR += r; sumG += g; sumB += b;
+    if(mn >= 252) clipHi++;
+    if(mx <= 3) clipLo++;
+    // candidates for "this should have been grey": bright but barely
+    // coloured. Averaging those is far more reliable than grey-world,
+    // which is thrown by any large block of one colour.
+    if(y > 120 && y < 250 && sat < 0.16) neutrals.push([r,g,b]);
+  }
+
+  lum.sort((a,b)=>a-b);
+  const pct = q => lum[Math.min(lum.length-1, Math.max(0, Math.floor(lum.length*q)))];
+
+  // noise estimate: mean absolute difference between horizontal
+  // neighbours, taken from the flattest half of the image so edges
+  // don't read as noise
+  const diffs = [];
+  for(let y=0; y<h; y++){
+    for(let x=1; x<w; x++){
+      const i=(y*w+x)*4, j=(y*w+x-1)*4;
+      diffs.push(Math.abs(d[i]-d[j]) + Math.abs(d[i+1]-d[j+1]) + Math.abs(d[i+2]-d[j+2]));
+    }
+  }
+  diffs.sort((a,b)=>a-b);
+  const flatNoise = diffs[Math.floor(diffs.length*0.35)] / 3;
+
+  return {
+    p1: pct(0.01), p10: pct(0.10), p50: pct(0.50), p90: pct(0.90), p99: pct(0.99),
+    meanSat: satSum / n,
+    clipHi: clipHi / n, clipLo: clipLo / n,
+    neutrals, flatNoise,
+    meanRGB: n ? [sumR/n, sumG/n, sumB/n] : null,
+    darkShare: lum.filter(v=>v<32).length / lum.length
+  };
+}
+
+function autoFix(){
+  const a = analyseImage();
+  if(!a){ toast("Load a photo first"); return; }
+
+  const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, Math.round(v)));
+  const notes = [];
+
+  // --- white balance ---
+  // Preferred: average the bright, barely-coloured pixels — the things
+  // that were probably grey in the room. But a heavy cast pushes every
+  // pixel past the "barely coloured" test, so a strongly tungsten-lit
+  // photo finds no candidates at all — exactly when the correction is
+  // needed most. Fall back to the whole-image average in that case.
+  let src = null;
+  if(a.neutrals.length > 30){
+    let r=0,g=0,b=0;
+    for(const q of a.neutrals){ r+=q[0]; g+=q[1]; b+=q[2]; }
+    const k = a.neutrals.length;
+    src = [r/k, g/k, b/k];
+  }else if(a.meanRGB){
+    src = a.meanRGB;
+  }
+  if(src){
+    const cast = Math.abs(src[0]-src[1]) + Math.abs(src[1]-src[2]);
+    if(cast > 4){
+      setNeutralFrom(src[0], src[1], src[2]);
+      notes.push("white balance");
+    }
+  }
+
+  // --- exposure: put the midpoint near the middle ---
+  FX.bright = a.p50 > 4 ? clamp((118 / a.p50 - 1) * 100, -50, 60) : 0;
+  if(Math.abs(FX.bright) > 3) notes.push("brightness");
+
+  // --- contrast: only if the photo doesn't already use the range ---
+  const spread = a.p99 - a.p1;
+  FX.contrast = spread < 205 ? clamp((205 - spread) / 205 * 70, 0, 55) : 0;
+  if(FX.contrast > 3) notes.push("contrast");
+
+  // --- open the shadows when a lot of the frame is nearly black ---
+  FX.shadows = a.darkShare > 0.12 ? clamp(a.darkShare * 190, 0, 70) : 0;
+  if(FX.shadows > 3) notes.push("shadows");
+
+  // --- rein in blown highlights, and recover what can be recovered ---
+  FX.highlights = a.clipHi > 0.005 ? clamp(-a.clipHi * 900, -70, 0) : 0;
+  FX.recover = a.clipHi > 0.002 ? clamp(a.clipHi * 1400, 0, 70) : 0;
+  if(FX.recover > 3) notes.push("highlight recovery");
+
+  // --- noise, measured rather than assumed ---
+  FX.denoise = a.flatNoise > 2.2 ? clamp((a.flatNoise - 2.2) * 22, 0, 65) : 0;
+  if(FX.denoise > 3) notes.push("noise reduction");
+
+  // --- lift flat colour, but never push an already-vivid photo ---
+  FX.vib = a.meanSat < 0.22 ? clamp((0.22 - a.meanSat) * 260, 0, 45) : 0;
+  if(FX.vib > 3) notes.push("vibrancy");
+
+  syncAdjustSliders();
+  wbStateText();
+  draw();
+  if(S.palette.length) extract();
+
+  toast(notes.length ? "Set " + notes.join(", ") : "Nothing needed fixing");
+}
+
+/* push the state back onto the controls, so an automatic decision is
+   visible and editable rather than hidden */
+function syncAdjustSliders(){
+  ["bright","contrast","gamma","shadows","highlights","vib","sat","temp","tint","denoise","recover"]
+    .forEach(k=>{
+      const el = $(k);
+      if(!el) return;
+      el.value = FX[k];
+      const out = $(k + "Val");
+      if(out) out.textContent = FX[k] > 0 ? "+" + FX[k] : String(FX[k]);
+    });
+}
+
 // help panels
 document.querySelectorAll(".help").forEach(btn=>{
   btn.addEventListener("click", e=>{
@@ -4294,7 +4610,7 @@ document.querySelectorAll(".help").forEach(btn=>{
 $("straighten").addEventListener("input", e=>{
   CROP.angle = +e.target.value;
   $("straightenVal").textContent = CROP.angle ? CROP.angle + "\u00b0" : "0";
-  draw();
+  scheduleDraw();
 });
 
 $("cropStart").addEventListener("click", ()=> CROP.active ? cropCancel() : cropStart());
@@ -4348,14 +4664,14 @@ view.addEventListener("pointermove", ev=>{
   // never let it run off the edge
   CROP.rect.w = Math.min(CROP.rect.w, S.full.width - CROP.rect.x);
   CROP.rect.h = Math.min(CROP.rect.h, S.full.height - CROP.rect.y);
-  draw();
+  scheduleDraw();
 });
 
 view.addEventListener("pointerup", ()=>{ CROP.drag = null; });
 
 // image adjustments
 function adjustChanged(){
-  draw();
+  scheduleDraw();
   clearTimeout(adjustChanged._t);
   // re-extract once the slider settles, not on every pixel of drag
   adjustChanged._t = setTimeout(()=>{
@@ -4373,8 +4689,20 @@ function bindSlider(id, key){
   });
 }
 
-["bright","contrast","gamma","shadows","highlights","vib","sat","temp","tint"]
+["bright","contrast","gamma","shadows","highlights","vib","sat","temp","tint","denoise","recover"]
   .forEach(k => bindSlider(k, k));
+
+// sharpen is a view tool: redraw, but never re-extract
+$("sharpen").addEventListener("input", e=>{
+  FX.sharpen = +e.target.value;
+  $("sharpenVal").textContent = FX.sharpen ? FX.sharpen : "off";
+  scheduleDraw();
+});
+
+$("clipWarn").addEventListener("change", e=>{
+  FX.clipWarn = e.target.checked;
+  draw();
+});
 
 // white balance by tapping a neutral
 $("wbPick").addEventListener("click", ()=>{
@@ -4394,8 +4722,10 @@ function wbStateText(){
     : "Nothing set — the photo is as the camera saw it.";
 }
 
+$("autoFix").addEventListener("click", autoFix);
+
 $("resetAdjust").addEventListener("click", ()=>{
-  ["bright","contrast","gamma","shadows","highlights","vib","sat","temp","tint"].forEach(k=>{
+  ["bright","contrast","gamma","shadows","highlights","vib","sat","temp","tint","denoise","recover"].forEach(k=>{
     FX[k] = 0; $(k).value = 0; $(k + "Val").textContent = "0";
   });
   FX.wb = [1,1,1];
@@ -4413,7 +4743,7 @@ $("steps").addEventListener("input", e=>{
   FX.steps = v;
   $("stepsVal").textContent = v > 1 ? v : "off";
   if(v === 1){ FX.steps = 0; $("stepsVal").textContent = "off"; }
-  draw();
+  scheduleDraw();
 });
 
 $("squint").addEventListener("input", e=>{
@@ -4430,7 +4760,7 @@ $("squint").addEventListener("input", e=>{
 $("sil").addEventListener("input", e=>{
   FX.sil = +e.target.value;
   $("silVal").textContent = FX.sil ? FX.sil + "%" : "off";
-  draw();
+  scheduleDraw();
 });
 
 $("silInvert").addEventListener("click", ()=>{
