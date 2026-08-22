@@ -53,11 +53,11 @@
   --ink-800:#1D1B18;
   --ink-700:#2A2724;
   --ink-600:#3B3733;
-  --ink-500:#8D8781;
+  --ink-500:#A8A29A;
   --field-gray:#7E7E7E;   /* true neutral — the colour-judging field */
-  --ink-200:#C7C2BB;
-  --ink-100:#E5E1DB;
-  --ink-050:#EFEDE8;
+  --ink-200:#D6D1C9;
+  --ink-100:#EDEAE4;
+  --ink-050:#F6F4F0;
 
   /* Xenia jade. Confined to brand and interactive state — never
      placed beside the image, where it would bias colour reading. */
@@ -136,7 +136,7 @@ h1{
 
 header .sub{
   font-family:var(--data);
-  font-size:10.5px;
+  font-size:11px;
   letter-spacing:0.17em;
   text-transform:uppercase;
   color:var(--ink-500);
@@ -459,7 +459,7 @@ footer .line{
 #navbar .btnset{align-items:center;gap:8px;}
 
 #counter{
-  font-size:11.5px;
+  font-size:12.5px;
   letter-spacing:0.09em;
   color:var(--ink-500);
   min-width:52px;
@@ -573,11 +573,11 @@ footer .line{
 
 .section h3{
   font-family:var(--data);
-  font-size:10.5px;
+  font-size:11px;
   font-weight:500;
   text-transform:uppercase;
-  letter-spacing:0.2em;
-  color:var(--ink-500);
+  letter-spacing:0.18em;
+  color:var(--ink-200);
   margin:0 0 15px;
   display:flex;
   align-items:center;
@@ -667,9 +667,9 @@ button.wide{width:100%;}
 .toggle input{accent-color:var(--jade);width:15px;height:15px;cursor:pointer;}
 
 .hint{
-  font-size:13px;
-  color:var(--ink-500);
-  line-height:1.5;
+  font-size:13.5px;
+  color:var(--ink-200);
+  line-height:1.55;
   margin:9px 0 0;
 }
 
@@ -698,8 +698,8 @@ button.wide{width:100%;}
 
 .helpbox{
   display:none;
-  font-size:13.5px;
-  line-height:1.6;
+  font-size:14px;
+  line-height:1.65;
   color:var(--ink-200);
   background:var(--ink-900);
   border-left:2px solid var(--jade);
@@ -762,11 +762,22 @@ button.wide{width:100%;}
 .own:hover{background:var(--ink-700);}
 .own input{accent-color:var(--jade);width:14px;height:14px;flex:0 0 auto;}
 .ownchip{width:16px;height:16px;border-radius:2px;flex:0 0 auto;border:1px solid var(--ink-600);}
-.ownname{font-size:12px;color:var(--ink-200);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.ownadd{
+  padding:2px 8px;
+  font-size:13px;
+  line-height:1.2;
+  background:transparent;
+  border:1px solid var(--ink-600);
+  color:var(--ink-200);
+  flex:0 0 auto;
+}
+.ownadd:hover{background:var(--jade);color:var(--ink-900);border-color:var(--jade);}
+
+.ownname{font-size:12.5px;color:var(--ink-100);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 
 .sw .mix{
-  font-size:10px;text-transform:uppercase;letter-spacing:0.08em;
-  padding:3px 5px;background:transparent;
+  font-size:10.5px;text-transform:uppercase;letter-spacing:0.06em;
+  padding:4px 7px;background:transparent;
   border:1px solid var(--ink-600);color:var(--ink-500);
 }
 .sw .mix:hover{color:var(--ink-900);background:var(--jade);border-color:var(--jade);}
@@ -781,7 +792,7 @@ button.wide{width:100%;}
 .calrow:hover{background:var(--ink-700);}
 .calrow.done .calname{color:var(--jade-lit);}
 .calchip{width:22px;height:22px;border-radius:2px;flex:0 0 auto;border:1px solid var(--ink-600);}
-.calname{flex:1;font-size:12.5px;color:var(--ink-200);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.calname{flex:1;font-size:13px;color:var(--ink-100);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .calbtn{
   font-size:10px;text-transform:uppercase;letter-spacing:0.08em;
   padding:3px 7px;background:transparent;
@@ -822,7 +833,7 @@ button.wide{width:100%;}
   display:flex;
   justify-content:space-between;
   font-family:var(--data);
-  font-size:9.5px;
+  font-size:10.5px;
   letter-spacing:0.14em;
   text-transform:uppercase;
   color:var(--ink-500);
@@ -831,7 +842,7 @@ button.wide{width:100%;}
 
 #trayVerdict{
   font-family:var(--data);
-  font-size:11px;
+  font-size:12px;
   letter-spacing:0.05em;
   margin-top:8px;
   color:var(--ink-500);
@@ -848,7 +859,7 @@ button.wide{width:100%;}
   padding:5px 7px;
 }
 .traychip{width:22px;height:22px;border-radius:2px;flex:0 0 auto;border:1px solid var(--ink-600);}
-.trayname{flex:1;font-size:12.5px;color:var(--ink-100);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.trayname{flex:1;font-size:13px;color:var(--ink-100);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .trayparts{
   font-family:var(--data);font-size:12px;color:var(--ink-050);
   min-width:52px;text-align:center;
@@ -889,7 +900,7 @@ button.wide{width:100%;}
   top:0;
   z-index:3;
   font-family:var(--data);
-  font-size:10px;
+  font-size:10.5px;
   font-weight:500;
   letter-spacing:0.2em;
   text-transform:uppercase;
@@ -928,9 +939,36 @@ button.wide{width:100%;}
   align-items:center;
   justify-content:space-between;
   padding:9px 11px;
-  gap:8px;
+  gap:8px 10px;
   min-width:0;
+  /* The row clips its overflow for the rounded corner, so anything
+     that doesn't fit simply vanishes — which is how the mix button
+     disappeared once a product name sat next to it. Let the actions
+     wrap to a second line instead of being cut off. */
+  flex-wrap:wrap;
 }
+.subhead{
+  font-family:var(--data);
+  font-size:10.5px;
+  letter-spacing:0.16em;
+  text-transform:uppercase;
+  color:var(--jade);
+  margin:0 0 9px;
+  padding-bottom:5px;
+  border-bottom:1px solid var(--ink-700);
+}
+
+.setrow-label{
+  font-family:var(--data);
+  font-size:10.5px;
+  letter-spacing:0.16em;
+  text-transform:uppercase;
+  color:var(--ink-200);
+  margin:0 0 6px;
+}
+
+.sw .lines{flex:1 1 auto;}
+.sw .tags{margin-left:auto;}
 
 .sw .hex{
   font-family:var(--data);
@@ -943,7 +981,7 @@ button.wide{width:100%;}
 .sw .tags{display:flex;gap:4px;align-items:center;}
 
 .tag{
-  font-size:9px;
+  font-size:10px;
   text-transform:uppercase;
   letter-spacing:0.09em;
   color:var(--ink-900);
@@ -956,19 +994,19 @@ button.wide{width:100%;}
 
 .sw .subhex{
   font-family:var(--data);
-  font-size:10px;
+  font-size:12.5px;
   letter-spacing:0.04em;
-  color:var(--ink-500);
+  color:var(--ink-200);
 }
 .sw .subhex.q-far{color:#B08A6A;}
 
-#swatches.long .subhex{font-size:9px;}
+
 
 .sw .find{
-  font-size:10px;
+  font-size:10.5px;
   text-transform:uppercase;
-  letter-spacing:0.08em;
-  padding:3px 5px;
+  letter-spacing:0.06em;
+  padding:4px 7px;
   background:transparent;
   border:1px solid var(--ink-600);
   color:var(--ink-500);
@@ -1014,7 +1052,7 @@ button.wide{width:100%;}
 .scalelabels{
   display:flex;justify-content:space-between;
   font-family:var(--data);
-  font-size:10px;color:var(--ink-500);
+  font-size:11px;color:var(--ink-200);
   margin-top:5px;
 }
 
@@ -1038,7 +1076,7 @@ button.wide{width:100%;}
 .saved .acts{display:flex;gap:4px;}
 .saved .acts button{padding:3px 6px;font-size:11px;}
 
-.empty{font-size:13px;color:var(--ink-500);}
+.empty{font-size:13.5px;color:var(--ink-200);}
 
 /* Inputs stay in the layout but invisible. `hidden` inputs get
    ignored for interaction in some browsers and inside sandboxed
@@ -1379,7 +1417,35 @@ input[type=url]::placeholder{color:var(--ink-500);}
 
   <!-- ============ RIGHT: controls ============ -->
   <div class="panel" id="palettePanel">
-    <div class="section">
+      <div class="section">
+      <h3>Palette <button class="help" data-help="h-palette" aria-label="About palette extraction">?</button></h3>
+      <div class="helpbox" id="h-palette">
+        <p>Most palette tools return the colours that cover the <em>most area</em> of a photo. For a painter that's the wrong question — it hands you five variations of mud and skips the one bright note that made you pick the reference.</p>
+        <p><strong>Tune for painting</strong> forces three things in: the darkest dark, the lightest light, and the strongest accent. Those are what a painting is built on.</p>
+        <p>Turn it off to see the difference. If the tuned version doesn't look more useful to you, trust your eye over the tool.</p>
+      </div>
+      <div class="row">
+        <label for="count">Colours</label>
+        <span class="val mono" id="countVal">6</span>
+      </div>
+      <input type="range" id="count" min="3" max="24" value="6" step="1">
+      <div class="btnset" style="margin-top:9px">
+        <button data-count="6">6</button>
+        <button data-count="12">12</button>
+        <button data-count="18">18</button>
+        <button data-count="24">24</button>
+      </div>
+      <div class="row" style="margin-top:12px">
+        <label class="toggle">
+          <input type="checkbox" id="tuned" checked>
+          Tune for painting
+        </label>
+      </div>
+      <p class="hint" id="tunedHint">Start around 5 or 6 to paint from. Go higher when you want a fuller swatch library off a reference rather than a working palette. Near-identical colours are merged automatically, so asking for 24 may return slightly fewer.</p>
+      <button class="wide" id="reextract" style="margin-top:11px">Re-extract</button>
+    </div>
+
+      <div class="section">
       <h3>Colours <span class="mono" style="text-transform:none;letter-spacing:0" id="swCount"></span> <button class="help" data-help="h-colours" aria-label="About the colour list">?</button></h3>
       <div class="helpbox" id="h-colours">
         <p><strong>Tap a swatch or its code</strong> to copy the hex.</p>
@@ -1429,6 +1495,21 @@ input[type=url]::placeholder{color:var(--ink-500);}
       <div class="btnset" style="margin-top:6px">
         <button id="savePalImg">Save palette image</button>
       </div>
+
+      <div class="section">
+      <h3>Value scale <button class="help" data-help="h-value" aria-label="About the value scale">?</button></h3>
+      <div class="helpbox" id="h-value">
+        <p><strong>Value is how light or dark a colour is</strong>, ignoring what colour it is. A saturated red and a dull green can share a value — squint and they merge.</p>
+        <p>Value does most of the work in a picture. You can get every hue wrong and still have a painting that reads, but get the values wrong and nothing saves it.</p>
+        <p>Watch where the dots land. <strong>Bunched in the middle is the classic beginner signature</strong> — a timid painting with no real darks and no real lights. Good references usually spread.</p>
+      </div>
+      <div id="valuebar"></div>
+      <div class="scalelabels"><span>dark</span><span>light</span></div>
+      <label class="toggle" style="margin-top:11px">
+        <input type="checkbox" id="valueview">
+        Show image in value only
+      </label>
+    </div>
 
       <div class="section">
       <h3>Mixer <button class="help" data-help="h-mixer" aria-label="About the mixer">?</button></h3>
@@ -1483,59 +1564,67 @@ input[type=url]::placeholder{color:var(--ink-500);}
   </div>
 
   <div class="panel" id="controlPanel">
-
-    <div class="section">
-      <h3>Palette <button class="help" data-help="h-palette" aria-label="About palette extraction">?</button></h3>
-      <div class="helpbox" id="h-palette">
-        <p>Most palette tools return the colours that cover the <em>most area</em> of a photo. For a painter that's the wrong question — it hands you five variations of mud and skips the one bright note that made you pick the reference.</p>
-        <p><strong>Tune for painting</strong> forces three things in: the darkest dark, the lightest light, and the strongest accent. Those are what a painting is built on.</p>
-        <p>Turn it off to see the difference. If the tuned version doesn't look more useful to you, trust your eye over the tool.</p>
+      <div class="section">
+      <h3>Framing <button class="help" data-help="h-frame" aria-label="About crop and straighten">?</button></h3>
+      <div class="helpbox" id="h-frame">
+        <p>A reference is rarely framed the way you want to paint it. <strong>Cropping changes which colours dominate</strong>, so it changes the palette too &mdash; crop first, then pull your colours.</p>
+        <p><strong>Straighten before gridding.</strong> A tilted horizon makes nonsense of a grid, because every cell inherits the tilt.</p>
+        <p>Rotating shows thirds guides &mdash; line the horizon up against one. The image scales up slightly as it turns so no empty corners appear.</p>
+        <p>Both rewrite the working image, so every other tool sees the new framing. The original is kept and <em>Undo framing</em> restores it.</p>
       </div>
+
       <div class="row">
-        <label for="count">Colours</label>
-        <span class="val mono" id="countVal">6</span>
+        <label for="straighten">Straighten</label>
+        <span class="val mono" id="straightenVal">0</span>
       </div>
-      <input type="range" id="count" min="3" max="24" value="6" step="1">
-      <div class="btnset" style="margin-top:9px">
-        <button data-count="6">6</button>
-        <button data-count="12">12</button>
-        <button data-count="18">18</button>
-        <button data-count="24">24</button>
-      </div>
-      <div class="row" style="margin-top:12px">
-        <label class="toggle">
-          <input type="checkbox" id="tuned" checked>
-          Tune for painting
-        </label>
-      </div>
-      <p class="hint" id="tunedHint">Start around 5 or 6 to paint from. Go higher when you want a fuller swatch library off a reference rather than a working palette. Near-identical colours are merged automatically, so asking for 24 may return slightly fewer.</p>
-      <button class="wide" id="reextract" style="margin-top:11px">Re-extract</button>
-    </div>
+      <input type="range" id="straighten" min="-15" max="15" value="0" step="0.5">
 
+      <button class="wide" id="cropStart" style="margin-top:11px">Crop</button>
 
-    <div class="section">
-      <h3>Value scale <button class="help" data-help="h-value" aria-label="About the value scale">?</button></h3>
-      <div class="helpbox" id="h-value">
-        <p><strong>Value is how light or dark a colour is</strong>, ignoring what colour it is. A saturated red and a dull green can share a value — squint and they merge.</p>
-        <p>Value does most of the work in a picture. You can get every hue wrong and still have a painting that reads, but get the values wrong and nothing saves it.</p>
-        <p>Watch where the dots land. <strong>Bunched in the middle is the classic beginner signature</strong> — a timid painting with no real darks and no real lights. Good references usually spread.</p>
+      <div id="cropBar" style="display:none">
+        <p class="hint">Drag across the photo to set the area, then apply.</p>
+        <div class="btnset" style="margin-top:6px">
+          <button data-ratio="free" class="on">Free</button>
+          <button data-ratio="1">1:1</button>
+          <button data-ratio="0.8">4:5</button>
+          <button data-ratio="1.5">3:2</button>
+        </div>
+        <div class="btnset" style="margin-top:6px">
+          <button id="cropApply">Apply</button>
+          <button id="cropCancel">Cancel</button>
+        </div>
       </div>
-      <div id="valuebar"></div>
-      <div class="scalelabels"><span>dark</span><span>light</span></div>
-      <label class="toggle" style="margin-top:11px">
-        <input type="checkbox" id="valueview">
-        Show image in value only
-      </label>
+
+      <button class="wide" id="cropUndo" style="margin-top:6px;display:none">Undo framing</button>
     </div>
 
     <div class="section">
       <h3>Adjust <button class="help" data-help="h-adjust" aria-label="About adjustments">?</button></h3>
       <div class="helpbox" id="h-adjust">
         <p>For fixing a bad photograph &mdash; an underexposed reference, a flat grey phone snap, a scan that lost its colour.</p>
-        <p><strong>These three feed the palette.</strong> Unlike the study tools, correcting the image changes the colours that get extracted, because you're deciding this is what the subject really looked like.</p>
-        <p><strong>Vibrancy is not saturation.</strong> Saturation scales every colour equally and blows out the ones that were already strong. Vibrancy pushes the dull colours hardest and leaves saturated ones nearly alone, so skin and skies survive it.</p>
+        <p><strong>These all feed the palette.</strong> Unlike the study tools, correcting the image changes the colours that get extracted, because you're deciding this is what the subject really looked like.</p>
+        <p><strong>Start with white balance.</strong> It's the error you can't see &mdash; your eye corrected for the room's light while you were standing in it, but the camera didn't. Every colour in a warm-lit photo is warm, and no other slider fixes that.</p>
+        <p><strong>Vibrancy is not saturation.</strong> Saturation scales every colour equally and blows out the ones already strong. Vibrancy pushes the dull colours hardest, so skin and skies survive it.</p>
         <p>Go gently. A photo pushed hard gives a palette that looks exciting on screen and garish on canvas.</p>
       </div>
+
+      <div class="subhead">White balance</div>
+      <button class="wide" id="wbPick">Tap something neutral in the photo</button>
+      <p class="hint" id="wbState">Nothing set — the photo is as the camera saw it.</p>
+
+      <div class="row" style="margin-top:10px">
+        <label for="temp">Temperature</label>
+        <span class="val mono" id="tempVal">0</span>
+      </div>
+      <input type="range" id="temp" min="-100" max="100" value="0" step="1">
+
+      <div class="row" style="margin-top:10px">
+        <label for="tint">Tint</label>
+        <span class="val mono" id="tintVal">0</span>
+      </div>
+      <input type="range" id="tint" min="-100" max="100" value="0" step="1">
+
+      <div class="subhead" style="margin-top:16px">Tone</div>
 
       <div class="row">
         <label for="bright">Brightness</label>
@@ -1543,19 +1632,45 @@ input[type=url]::placeholder{color:var(--ink-500);}
       </div>
       <input type="range" id="bright" min="-50" max="60" value="0" step="1">
 
-      <div class="row" style="margin-top:12px">
+      <div class="row" style="margin-top:10px">
         <label for="contrast">Contrast</label>
         <span class="val mono" id="contrastVal">0</span>
       </div>
       <input type="range" id="contrast" min="-50" max="80" value="0" step="1">
 
-      <div class="row" style="margin-top:12px">
+      <div class="row" style="margin-top:10px">
+        <label for="gamma">Midtones</label>
+        <span class="val mono" id="gammaVal">0</span>
+      </div>
+      <input type="range" id="gamma" min="-80" max="80" value="0" step="1">
+
+      <div class="row" style="margin-top:10px">
+        <label for="shadows">Shadows</label>
+        <span class="val mono" id="shadowsVal">0</span>
+      </div>
+      <input type="range" id="shadows" min="-60" max="100" value="0" step="1">
+
+      <div class="row" style="margin-top:10px">
+        <label for="highlights">Highlights</label>
+        <span class="val mono" id="highlightsVal">0</span>
+      </div>
+      <input type="range" id="highlights" min="-100" max="60" value="0" step="1">
+
+      <div class="subhead" style="margin-top:16px">Colour</div>
+
+      <div class="row">
         <label for="vib">Vibrancy</label>
         <span class="val mono" id="vibVal">0</span>
       </div>
       <input type="range" id="vib" min="-100" max="100" value="0" step="1">
 
-      <button class="wide" id="resetAdjust" style="margin-top:12px">Reset adjustments</button>
+      <div class="row" style="margin-top:10px">
+        <label for="sat">Saturation</label>
+        <span class="val mono" id="satVal">0</span>
+      </div>
+      <input type="range" id="sat" min="-100" max="100" value="0" step="1">
+
+      <button class="wide" id="resetAdjust" style="margin-top:14px">Reset all adjustments</button>
     </div>
 
     <div class="section">
@@ -1613,31 +1728,7 @@ input[type=url]::placeholder{color:var(--ink-500);}
       </div>
     </div>
 
-    <div class="section">
-      <h3>Calibrate <span class="mono" style="text-transform:none;letter-spacing:0" id="calCount"></span> <button class="help" data-help="h-cal" aria-label="About calibration">?</button></h3>
-      <div class="helpbox" id="h-cal">
-        <p>Every supply set here carries <strong>approximate</strong> values — how a pencil or tube looks in use, judged by eye rather than measured.</p>
-        <p><strong>Even measured data would be wrong for you.</strong> The same pencil lays down differently on hot-press than on toothy paper, at different pressures, under different light. The only value truly right for your work is the one off your own swatch.</p>
-        <p><strong>To correct a colour:</strong> swatch your set on the paper you actually use, photograph it in even daylight, load that photo as the reference, then press <em>set</em> beside a colour and tap its swatch in the photo.</p>
-        <p>Corrections apply everywhere at once — naming, the mixer and the printouts. They're saved on this device; export them to move them or keep a backup.</p>
-        <p><strong>Shoot the photo carefully.</strong> Flat even light, no shadow across the chart, no auto white-balance shifting between shots. A photo taken under warm indoor light will calibrate every colour warm.</p>
-      </div>
-
-      <select id="calset"></select>
-
-      <div id="calArm" style="display:none"></div>
-
-      <div id="calList"></div>
-
-      <div class="btnset" style="margin-top:10px">
-        <button id="calExport">Export</button>
-        <label class="btnlike" for="calImportInput">Import</label>
-        <button id="calReset">Reset set</button>
-      </div>
-      <input type="file" id="calImportInput" accept="application/json,.json" class="vh">
-    </div>
-
-    <div class="section">
+      <div class="section">
       <h3>Grid <button class="help" data-help="h-grid" aria-label="About the grid">?</button></h3>
       <div class="helpbox" id="h-grid">
         <p>Divide the reference into cells, draw the same cells on your paper, then copy one cell at a time. It turns an overwhelming whole into a series of small, achievable shapes.</p>
@@ -1681,7 +1772,31 @@ input[type=url]::placeholder{color:var(--ink-500);}
       <p class="hint">Fills the screen with the gridded reference and keeps the display awake — for painting from a propped-up tablet.</p>
     </div>
 
-    <div class="section">
+      <div class="section">
+      <h3>Calibrate <span class="mono" style="text-transform:none;letter-spacing:0" id="calCount"></span> <button class="help" data-help="h-cal" aria-label="About calibration">?</button></h3>
+      <div class="helpbox" id="h-cal">
+        <p>Every supply set here carries <strong>approximate</strong> values — how a pencil or tube looks in use, judged by eye rather than measured.</p>
+        <p><strong>Even measured data would be wrong for you.</strong> The same pencil lays down differently on hot-press than on toothy paper, at different pressures, under different light. The only value truly right for your work is the one off your own swatch.</p>
+        <p><strong>To correct a colour:</strong> swatch your set on the paper you actually use, photograph it in even daylight, load that photo as the reference, then press <em>set</em> beside a colour and tap its swatch in the photo.</p>
+        <p>Corrections apply everywhere at once — naming, the mixer and the printouts. They're saved on this device; export them to move them or keep a backup.</p>
+        <p><strong>Shoot the photo carefully.</strong> Flat even light, no shadow across the chart, no auto white-balance shifting between shots. A photo taken under warm indoor light will calibrate every colour warm.</p>
+      </div>
+
+      <select id="calset"></select>
+
+      <div id="calArm" style="display:none"></div>
+
+      <div id="calList"></div>
+
+      <div class="btnset" style="margin-top:10px">
+        <button id="calExport">Export</button>
+        <label class="btnlike" for="calImportInput">Import</label>
+        <button id="calReset">Reset set</button>
+      </div>
+      <input type="file" id="calImportInput" accept="application/json,.json" class="vh">
+    </div>
+
+      <div class="section">
       <h3>Saved palettes <button class="help" data-help="h-saved" aria-label="About saved palettes">?</button></h3>
       <div class="helpbox" id="h-saved">
         <p>Palettes are saved <strong>on this device only</strong>. Clearing your browser data will remove them.</p>
@@ -1693,9 +1808,9 @@ input[type=url]::placeholder{color:var(--ink-500);}
         <label class="btnlike" for="importInput">Import file</label>
       </div>
     </div>
-
   </div>
-</main>
+
+  </main>
 
 <div id="installRow">
   <span id="installText">Install for offline use</span>
@@ -1849,6 +1964,8 @@ let NAMING = "hex";
    tap each swatch to correct that colour. Corrections live on this
    device and can be exported.
    ============================================================ */
+
+let WB_PICKING = false;
 
 const CAL_STORE = "art-helper:calibration";
 const CAL = { data:{}, arming:null };
@@ -2074,12 +2191,9 @@ function samplePixels(maxDim){
   const c = document.createElement("canvas");
   c.width = sw; c.height = sh;
   const ctx = c.getContext("2d", {willReadFrequently:true});
-  const cf = correctionFilter();
-  ctx.filter = cf.length ? cf.join(" ") : "none";
   ctx.drawImage(S.full, 0, 0, sw, sh);
-  ctx.filter = "none";
   const d = ctx.getImageData(0,0,sw,sh).data;
-  applyVibrance(d, FX.vib);
+  applyCorrections(d);
 
   const pts = [];
   for(let i=0;i<d.length;i+=4){
@@ -2576,7 +2690,21 @@ function renderInventory(){
     nm.className = "ownname";
     nm.textContent = name;
 
-    lab.appendChild(cb); lab.appendChild(chip); lab.appendChild(nm);
+    // a tick controls whether the search may use it; the + puts it
+    // straight in the tray, which is what you want when you already
+    // know the colour you're reaching for
+    const add = document.createElement("button");
+    add.className = "ownadd";
+    add.textContent = "+";
+    add.title = "Add " + name + " to the tray";
+    add.setAttribute("aria-label", "Add " + name + " to the tray");
+    add.addEventListener("click", e=>{
+      e.preventDefault();
+      e.stopPropagation();
+      trayAdd(name);
+    });
+
+    lab.appendChild(cb); lab.appendChild(chip); lab.appendChild(nm); lab.appendChild(add);
     wrap.appendChild(lab);
   });
 }
@@ -2584,6 +2712,9 @@ function renderInventory(){
 function setMixSet(key){
   MIX.setKey = key;
   MIX.own = null;              // null means "all of them"
+  // a tray of oils means nothing once you switch to pencils; the rows
+  // would linger while the mixed result silently went blank
+  if(typeof TRAY !== "undefined") TRAY.parts = [];
   renderInventory();
   renderMixer();
 }
@@ -2967,34 +3098,111 @@ function paintGrid(ctx, w, h, lineWidth){
    ============================================================ */
 
 const FX = { flipH:false, flipV:false, squint:0, steps:0, isolate:null, sil:0, silInvert:false,
-             bright:1, contrast:1, vib:0 };
+             bright:0, contrast:0, gamma:0, shadows:0, highlights:0, sat:0, vib:0,
+             temp:0, tint:0, wb:[1,1,1] };
 
-/* Corrections vs study views — the distinction matters below.
-   Brightness, contrast and vibrancy CORRECT a bad photograph, so
-   they feed the palette. Grid, squint, posterise and silhouette
-   are ways of LOOKING, so they never touch the extracted colours. */
-function correctionFilter(){
-  const f = [];
-  if(FX.bright   !== 1) f.push("brightness(" + FX.bright.toFixed(2) + ")");
-  if(FX.contrast !== 1) f.push("contrast("   + FX.contrast.toFixed(2) + ")");
-  return f;
+/* Corrections vs study views — the distinction still holds.
+   Everything below CORRECTS a photograph, so it feeds the palette.
+   Grid, squint, posterise and silhouette are ways of LOOKING, so
+   they never touch the extracted colours. */
+function correctionsActive(){
+  return FX.bright || FX.contrast || FX.gamma || FX.shadows || FX.highlights ||
+         FX.sat || FX.vib || FX.temp || FX.tint ||
+         FX.wb[0] !== 1 || FX.wb[1] !== 1 || FX.wb[2] !== 1;
 }
 
-/* Vibrancy has no CSS equivalent. Unlike saturation, which scales
-   everything equally and blows out colours that were already
-   strong, vibrancy pushes the dull colours hardest and leaves
-   saturated ones nearly alone. */
-function applyVibrance(d, amt){
-  if(!amt) return;
-  for(let i=0;i<d.length;i+=4){
-    const r=d[i], g=d[i+1], b=d[i+2];
-    const mx=Math.max(r,g,b), mn=Math.min(r,g,b);
-    const sat=(mx-mn)/255;
-    const f = 1 + amt*(1-sat);
-    const gray = 0.2126*r + 0.7152*g + 0.0722*b;
-    d[i]   = Math.max(0,Math.min(255, gray + (r-gray)*f));
-    d[i+1] = Math.max(0,Math.min(255, gray + (g-gray)*f));
-    d[i+2] = Math.max(0,Math.min(255, gray + (b-gray)*f));
+/* White balance gains.
+   A tap on something neutral gives the honest correction: whatever
+   that pixel is, it should have been grey, so scale each channel by
+   how far it strayed. Temperature and tint layer on top by feel. */
+function wbGains(){
+  const g = [FX.wb[0], FX.wb[1], FX.wb[2]];
+  const t = FX.temp / 100;
+  const n = FX.tint / 100;
+  g[0] *= 1 + t * 0.32;
+  g[2] *= 1 - t * 0.32;
+  g[1] *= 1 - n * 0.22;
+  return g;
+}
+
+function setNeutralFrom(r, g, b){
+  // scale each channel so the sampled pixel becomes grey, anchored
+  // on its own luminance so overall brightness doesn't jump
+  const lr = srgbToLinear(r), lg = srgbToLinear(g), lb = srgbToLinear(b);
+  const mean = (lr + lg + lb) / 3;
+  if(mean <= 0.001) return false;
+  FX.wb = [mean/Math.max(lr,0.004), mean/Math.max(lg,0.004), mean/Math.max(lb,0.004)];
+  return true;
+}
+
+/* Channel-independent operations fold into one 256-entry lookup per
+   channel, so the per-pixel loop is three array reads instead of a
+   dozen pow() calls. On a 12MP photo that is the difference between
+   instant and a visible stall. */
+let LUT = null, LUT_KEY = "";
+
+function buildLUT(){
+  const key = [FX.bright, FX.contrast, FX.gamma, FX.temp, FX.tint, FX.wb.join()].join("|");
+  if(LUT && LUT_KEY === key) return LUT;
+
+  const g = wbGains();
+  const bright = 1 + FX.bright / 100;
+  const contrast = 1 + FX.contrast / 100;
+  const gamma = Math.pow(2, -FX.gamma / 100);   // +ve lifts midtones
+
+  LUT = [new Uint8ClampedArray(256), new Uint8ClampedArray(256), new Uint8ClampedArray(256)];
+  for(let ch=0; ch<3; ch++){
+    for(let i=0; i<256; i++){
+      let v = srgbToLinear(i);
+      v *= g[ch] * bright;
+      v = (v - 0.18) * contrast + 0.18;          // contrast about mid grey
+      v = Math.max(0, v);
+      if(gamma !== 1) v = Math.pow(v, gamma);
+      LUT[ch][i] = Math.round(lin2srgb(v) * 255);
+    }
+  }
+  LUT_KEY = key;
+  return LUT;
+}
+
+/* Everything that depends on the pixel as a whole — tonal range and
+   saturation — runs after the lookup. */
+function applyCorrections(d){
+  if(!correctionsActive()) return;
+  const lut = buildLUT();
+
+  const sh = FX.shadows / 100;
+  const hi = FX.highlights / 100;
+  const sat = FX.sat / 100;
+  const vib = FX.vib / 100;
+
+  for(let i=0; i<d.length; i+=4){
+    let r = lut[0][d[i]], g = lut[1][d[i+1]], b = lut[2][d[i+2]];
+
+    if(sh || hi){
+      const y = (0.2126*r + 0.7152*g + 0.0722*b) / 255;
+      // weights peak at the ends and fade out by the middle, so
+      // lifting shadows leaves the highlights where they were
+      let f = 1;
+      if(sh) f += sh * Math.pow(1 - y, 2.2) * 1.4;
+      if(hi) f += hi * Math.pow(y, 2.2) * 0.9;
+      r *= f; g *= f; b *= f;
+    }
+
+    if(sat || vib){
+      const gray = 0.2126*r + 0.7152*g + 0.0722*b;
+      const mx = Math.max(r,g,b), mn = Math.min(r,g,b);
+      // vibrancy weights by how dull the pixel already is; saturation
+      // treats every pixel the same
+      const f = 1 + sat + vib * (1 - (mx-mn)/255);
+      r = gray + (r-gray)*f;
+      g = gray + (g-gray)*f;
+      b = gray + (b-gray)*f;
+    }
+
+    d[i]   = r < 0 ? 0 : r > 255 ? 255 : r;
+    d[i+1] = g < 0 ? 0 : g > 255 ? 255 : g;
+    d[i+2] = b < 0 ? 0 : b > 255 ? 255 : b;
   }
 }
 
@@ -3005,7 +3213,7 @@ function renderImage(ctx, w, h, opt){
   ctx.save();
   ctx.clearRect(0,0,w,h);
 
-  const filters = correctionFilter();
+  const filters = [];
   if(value) filters.push("grayscale(1)");
   if(FX.squint){
     // Blur relative to image size, so squinting looks the same at any
@@ -3020,11 +3228,20 @@ function renderImage(ctx, w, h, opt){
 
   ctx.translate(FX.flipH ? w : 0, FX.flipV ? h : 0);
   ctx.scale(FX.flipH ? -1 : 1, FX.flipV ? -1 : 1);
+
+  if(CROP.angle){
+    const sc = straightenScale(w, h, CROP.angle);
+    ctx.translate(w/2, h/2);
+    ctx.rotate(CROP.angle * Math.PI / 180);
+    ctx.scale(sc, sc);
+    ctx.translate(-w/2, -h/2);
+  }
+
   ctx.drawImage(S.full, 0, 0, w, h);
   ctx.restore();
   ctx.filter = "none";
 
-  if(FX.steps > 1 || FX.isolate || FX.sil || FX.vib) postProcess(ctx, w, h, value);
+  if(FX.steps > 1 || FX.isolate || FX.sil || correctionsActive()) postProcess(ctx, w, h, value);
 }
 
 function postProcess(ctx, w, h, value){
@@ -3041,7 +3258,7 @@ function postProcess(ctx, w, h, value){
     ib = parseInt(iso.slice(5,7),16);
   }
 
-  applyVibrance(d, FX.vib);
+  applyCorrections(d);
 
   const sil = FX.sil;
   const silCut = sil ? sil / 100 * 255 : 0;
@@ -3099,6 +3316,7 @@ function draw(){
   const ctx = view.getContext("2d", {willReadFrequently:true});
   renderImage(ctx, view.width, view.height);
   if(S.gridOn) paintGrid(ctx, view.width, view.height, 1);
+  paintCropOverlay(ctx, view.width, view.height);
 }
 
 /* ---- sampling by click ---- */
@@ -3495,11 +3713,30 @@ $("reextract").addEventListener("click", extract);
 // click-to-sample + loupe
 const view = $("view");
 view.addEventListener("click", e=>{
+  if(CROP.active) return;          // dragging a crop, not picking a colour
   const c = sampleAt(e.clientX, e.clientY);
   if(!c) return;
   // while calibrating, a tap corrects a product colour rather than
   // adding to the palette
   if(CAL.arming){ applyCalibrationTap(c.hex); return; }
+
+  // while picking a neutral, a tap sets the white balance. Sample the
+  // ORIGINAL pixel, not the corrected one — otherwise each pick
+  // compounds on the last.
+  if(WB_PICKING){
+    if(setNeutralFrom(c.r, c.g, c.b)){
+      WB_PICKING = false;
+      $("wbPick").classList.remove("on");
+      $("wbPick").textContent = "Tap something neutral in the photo";
+      wbStateText();
+      draw();
+      if(S.palette.length) extract();
+      toast("White balance set from " + c.hex);
+    }else{
+      toast("Too dark to balance from — try a lighter neutral");
+    }
+    return;
+  }
   if(S.palette.some(p=>p.hex === c.hex)){ toast(c.hex + " is already in the palette"); return; }
   S.palette.push({hex:c.hex, r:c.r, g:c.g, b:c.b, L:lightness(c.r,c.g,c.b), tag:"picked"});
   S.palette.sort((a,b)=>a.L-b.L);
@@ -3699,10 +3936,14 @@ $("printPal").addEventListener("click", ()=>doPrint(false));
 function drawSheet(withImage){
   const W = 1600;
   const PAD = 64;
-  const cols = withImage ? 4 : 3;
+  // more columns for a long palette: 24 swatches in four columns
+  // makes a sheet several thousand pixels tall, which is unwieldy to
+  // share and wasteful to print
+  const many = S.palette.length > 12;
+  const cols = withImage ? (many ? 6 : 4) : (many ? 5 : 3);
   const gap = 18;
   const cellW = Math.floor((W - PAD*2 - gap*(cols-1)) / cols);
-  const chipH = withImage ? 150 : 210;
+  const chipH = many ? (withImage ? 110 : 150) : (withImage ? 150 : 210);
   const labH = 66;
   const cellH = chipH + labH;
 
@@ -3898,6 +4139,144 @@ setMixSet("wnwinton");
 updateOwnCount();
 renderTray();
 
+/* ============================================================
+   Crop and straighten
+   ------------------------------------------------------------
+   A reference photo is rarely framed the way you want to paint
+   it, and cropping changes which colours dominate — so it changes
+   the palette too. A tilted horizon also makes nonsense of a grid.
+
+   Both are destructive on purpose: they rewrite the working image
+   so every other tool sees the new framing. The original is kept
+   so it can always be undone.
+   ============================================================ */
+
+const CROP = { active:false, rect:null, drag:null, angle:0 };
+
+function cropStart(){
+  if(!S.full){ toast("Load a photo first"); return; }
+  CROP.active = true;
+  CROP.rect = null;
+  $("cropBar").style.display = "";
+  $("cropStart").classList.add("on");
+  draw();
+  toast("Drag across the photo to set the crop");
+}
+
+function cropCancel(){
+  CROP.active = false;
+  CROP.rect = null;
+  CROP.drag = null;
+  $("cropBar").style.display = "none";
+  $("cropStart").classList.remove("on");
+  draw();
+}
+
+/* rotate about the centre, then scale up just enough that the
+   rotated rectangle still covers the frame — no empty corners */
+function straightenScale(w, h, deg){
+  const a = Math.abs(deg * Math.PI / 180);
+  if(!a) return 1;
+  const cos = Math.cos(a), sin = Math.sin(a);
+  return Math.max((w*cos + h*sin) / w, (w*sin + h*cos) / h);
+}
+
+function bakeImage(rect, deg){
+  const src = S.full;
+  const r = rect || {x:0, y:0, w:src.width, h:src.height};
+  const out = document.createElement("canvas");
+  out.width = Math.max(1, Math.round(r.w));
+  out.height = Math.max(1, Math.round(r.h));
+  const ctx = out.getContext("2d", {willReadFrequently:true});
+
+  if(deg){
+    const sc = straightenScale(out.width, out.height, deg);
+    ctx.translate(out.width/2, out.height/2);
+    ctx.rotate(deg * Math.PI / 180);
+    ctx.scale(sc, sc);
+    ctx.translate(-out.width/2, -out.height/2);
+  }
+  ctx.drawImage(src, r.x, r.y, r.w, r.h, 0, 0, out.width, out.height);
+  return out;
+}
+
+function applyCrop(){
+  const e = current();
+  if(!e) return;
+  if(!CROP.rect && !CROP.angle){ cropCancel(); return; }
+
+  // keep the untouched original once, so undo is always available
+  if(!e.original) e.original = e.canvas;
+
+  const baked = bakeImage(CROP.rect, CROP.angle);
+  e.canvas = baked;
+  e.ctx = baked.getContext("2d", {willReadFrequently:true});
+  S.full = baked;
+  S.fullCtx = e.ctx;
+
+  CROP.angle = 0;
+  $("straighten").value = 0;
+  $("straightenVal").textContent = "0";
+  cropCancel();
+  fitView();
+  extract();
+  $("cropUndo").style.display = "";
+  toast("Applied");
+}
+
+function undoCrop(){
+  const e = current();
+  if(!e || !e.original) return;
+  e.canvas = e.original;
+  e.ctx = e.original.getContext("2d", {willReadFrequently:true});
+  delete e.original;
+  S.full = e.canvas;
+  S.fullCtx = e.ctx;
+  CROP.angle = 0;
+  $("straighten").value = 0;
+  $("straightenVal").textContent = "0";
+  $("cropUndo").style.display = "none";
+  fitView();
+  extract();
+  toast("Back to the original framing");
+}
+
+/* the crop rectangle and the straighten guides draw over the image */
+function paintCropOverlay(ctx, w, h){
+  if(CROP.angle){
+    // thirds guides make a horizon easy to line up against
+    ctx.save();
+    ctx.strokeStyle = "rgba(255,255,255,.45)";
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    for(let i=1;i<3;i++){
+      const y = Math.round(h*i/3) + 0.5;
+      ctx.moveTo(0, y); ctx.lineTo(w, y);
+      const x = Math.round(w*i/3) + 0.5;
+      ctx.moveTo(x, 0); ctx.lineTo(x, h);
+    }
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  if(!CROP.active || !CROP.rect) return;
+  const sx = w / S.full.width, sy = h / S.full.height;
+  const r = CROP.rect;
+  const x = r.x*sx, y = r.y*sy, rw = r.w*sx, rh = r.h*sy;
+
+  ctx.save();
+  ctx.fillStyle = "rgba(10,10,10,.62)";
+  ctx.fillRect(0,0,w,y);
+  ctx.fillRect(0,y+rh,w,h-y-rh);
+  ctx.fillRect(0,y,x,rh);
+  ctx.fillRect(x+rw,y,w-x-rw,rh);
+
+  ctx.strokeStyle = "#fff";
+  ctx.lineWidth = 1.5;
+  ctx.strokeRect(x+0.5, y+0.5, rw, rh);
+  ctx.restore();
+}
+
 // help panels
 document.querySelectorAll(".help").forEach(btn=>{
   btn.addEventListener("click", e=>{
@@ -3911,47 +4290,124 @@ document.querySelectorAll(".help").forEach(btn=>{
   });
 });
 
+// framing
+$("straighten").addEventListener("input", e=>{
+  CROP.angle = +e.target.value;
+  $("straightenVal").textContent = CROP.angle ? CROP.angle + "\u00b0" : "0";
+  draw();
+});
+
+$("cropStart").addEventListener("click", ()=> CROP.active ? cropCancel() : cropStart());
+$("cropApply").addEventListener("click", applyCrop);
+$("cropCancel").addEventListener("click", cropCancel);
+$("cropUndo").addEventListener("click", undoCrop);
+
+let CROP_RATIO = null;
+document.querySelectorAll("[data-ratio]").forEach(btn=>{
+  btn.addEventListener("click", ()=>{
+    document.querySelectorAll("[data-ratio]").forEach(b=>b.classList.remove("on"));
+    btn.classList.add("on");
+    CROP_RATIO = btn.dataset.ratio === "free" ? null : parseFloat(btn.dataset.ratio);
+    if(CROP.rect && CROP_RATIO){
+      CROP.rect.h = CROP.rect.w / CROP_RATIO;
+      draw();
+    }
+  });
+});
+
+/* dragging on the canvas defines the crop — pointer events so a
+   finger and a mouse take the same path */
+function cropPoint(ev){
+  const r = view.getBoundingClientRect();
+  const x = (ev.clientX - r.left) / r.width * S.full.width;
+  const y = (ev.clientY - r.top) / r.height * S.full.height;
+  return {x: Math.max(0, Math.min(S.full.width, x)),
+          y: Math.max(0, Math.min(S.full.height, y))};
+}
+
+view.addEventListener("pointerdown", ev=>{
+  if(!CROP.active || !S.full) return;
+  ev.preventDefault();
+  view.setPointerCapture(ev.pointerId);
+  CROP.drag = cropPoint(ev);
+  CROP.rect = null;
+});
+
+view.addEventListener("pointermove", ev=>{
+  if(!CROP.active || !CROP.drag) return;
+  const p = cropPoint(ev);
+  let w = Math.abs(p.x - CROP.drag.x);
+  let h = Math.abs(p.y - CROP.drag.y);
+  if(CROP_RATIO) h = w / CROP_RATIO;
+  CROP.rect = {
+    x: Math.min(CROP.drag.x, p.x),
+    y: Math.min(CROP.drag.y, p.y),
+    w: Math.max(8, w),
+    h: Math.max(8, h)
+  };
+  // never let it run off the edge
+  CROP.rect.w = Math.min(CROP.rect.w, S.full.width - CROP.rect.x);
+  CROP.rect.h = Math.min(CROP.rect.h, S.full.height - CROP.rect.y);
+  draw();
+});
+
+view.addEventListener("pointerup", ()=>{ CROP.drag = null; });
+
 // image adjustments
 function adjustChanged(){
   draw();
   clearTimeout(adjustChanged._t);
-  // re-extract after the slider settles, not on every pixel of drag
+  // re-extract once the slider settles, not on every pixel of drag
   adjustChanged._t = setTimeout(()=>{
     if(S.full && S.palette.length) extract();
   }, 260);
 }
 
-$("bright").addEventListener("input", e=>{
-  const v = +e.target.value;
-  FX.bright = 1 + v/100;
-  $("brightVal").textContent = v > 0 ? "+" + v : v;
-  adjustChanged();
+function bindSlider(id, key){
+  const el = $(id), out = $(id + "Val");
+  el.addEventListener("input", e=>{
+    const v = +e.target.value;
+    FX[key] = v;
+    out.textContent = v > 0 ? "+" + v : v;
+    adjustChanged();
+  });
+}
+
+["bright","contrast","gamma","shadows","highlights","vib","sat","temp","tint"]
+  .forEach(k => bindSlider(k, k));
+
+// white balance by tapping a neutral
+$("wbPick").addEventListener("click", ()=>{
+  if(!S.full){ toast("Load a photo first"); return; }
+  WB_PICKING = !WB_PICKING;
+  $("wbPick").classList.toggle("on", WB_PICKING);
+  $("wbPick").textContent = WB_PICKING
+    ? "Tap the photo — or press to cancel"
+    : "Tap something neutral in the photo";
+  if(WB_PICKING) toast("Tap a white or grey area of the photo");
 });
 
-$("contrast").addEventListener("input", e=>{
-  const v = +e.target.value;
-  FX.contrast = 1 + v/100;
-  $("contrastVal").textContent = v > 0 ? "+" + v : v;
-  adjustChanged();
-});
-
-$("vib").addEventListener("input", e=>{
-  const v = +e.target.value;
-  FX.vib = v/100;
-  $("vibVal").textContent = v > 0 ? "+" + v : v;
-  adjustChanged();
-});
+function wbStateText(){
+  const set = FX.wb[0] !== 1 || FX.wb[1] !== 1 || FX.wb[2] !== 1;
+  $("wbState").textContent = set
+    ? "Neutral set from the photo. Press again to re-pick, or reset below."
+    : "Nothing set — the photo is as the camera saw it.";
+}
 
 $("resetAdjust").addEventListener("click", ()=>{
-  FX.bright = 1; FX.contrast = 1; FX.vib = 0;
-  $("bright").value = 0;   $("brightVal").textContent = "0";
-  $("contrast").value = 0; $("contrastVal").textContent = "0";
-  $("vib").value = 0;      $("vibVal").textContent = "0";
+  ["bright","contrast","gamma","shadows","highlights","vib","sat","temp","tint"].forEach(k=>{
+    FX[k] = 0; $(k).value = 0; $(k + "Val").textContent = "0";
+  });
+  FX.wb = [1,1,1];
+  WB_PICKING = false;
+  $("wbPick").classList.remove("on");
+  $("wbPick").textContent = "Tap something neutral in the photo";
+  wbStateText();
   draw();
   if(S.full && S.palette.length) extract();
 });
 
-// study tools
+// study tools// study tools
 $("steps").addEventListener("input", e=>{
   const v = +e.target.value;
   FX.steps = v;
