@@ -796,6 +796,76 @@ button.wide{width:100%;}
   font-size:12.5px;color:var(--jade-lit);
 }
 
+#tray{
+  border:1px solid var(--ink-700);
+  border-radius:var(--radius);
+  padding:13px;
+  margin-bottom:13px;
+  background:var(--ink-900);
+}
+
+/* Two halves meeting with no seam. Colours are judged at their
+   shared edge — a gap or a border between them makes a near match
+   look further off than it is. */
+.well{
+  display:flex;
+  height:92px;
+  border-radius:var(--radius);
+  overflow:hidden;
+  border:1px solid var(--ink-600);
+}
+.well .half{flex:1;}
+.well .half.tgt{background:var(--ink-700);}
+.well .half.mix{background:var(--ink-700);}
+
+.welllabels{
+  display:flex;
+  justify-content:space-between;
+  font-family:var(--data);
+  font-size:9.5px;
+  letter-spacing:0.14em;
+  text-transform:uppercase;
+  color:var(--ink-500);
+  margin-top:5px;
+}
+
+#trayVerdict{
+  font-family:var(--data);
+  font-size:11px;
+  letter-spacing:0.05em;
+  margin-top:8px;
+  color:var(--ink-500);
+}
+#trayVerdict.q-close{color:var(--jade-lit);}
+#trayVerdict.q-near{color:var(--ink-200);}
+#trayVerdict.q-far{color:#C98A6A;}
+
+#trayList{display:flex;flex-direction:column;gap:4px;margin-top:10px;}
+
+.trayrow{
+  display:flex;align-items:center;gap:8px;
+  border:1px solid var(--ink-700);border-radius:2px;
+  padding:5px 7px;
+}
+.traychip{width:22px;height:22px;border-radius:2px;flex:0 0 auto;border:1px solid var(--ink-600);}
+.trayname{flex:1;font-size:12.5px;color:var(--ink-100);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.trayparts{
+  font-family:var(--data);font-size:12px;color:var(--ink-050);
+  min-width:52px;text-align:center;
+}
+.traybtn{
+  padding:2px 8px;font-size:13px;line-height:1.2;
+  background:transparent;border:1px solid var(--ink-600);color:var(--ink-200);flex:0 0 auto;
+}
+.traybtn:hover{background:var(--jade);color:var(--ink-900);border-color:var(--jade);}
+
+.recipe .use{
+  font-size:10px;text-transform:uppercase;letter-spacing:0.08em;
+  padding:3px 7px;margin-top:7px;
+  background:transparent;border:1px solid var(--ink-600);color:var(--ink-500);
+}
+.recipe .use:hover{background:var(--jade);color:var(--ink-900);border-color:var(--jade);}
+
 /* ---------- swatches ---------- */
 
 #swatches{display:flex;flex-direction:column;gap:6px;}
@@ -1367,7 +1437,25 @@ input[type=url]::placeholder{color:var(--ink-500);}
         <p>This uses Kubelka&ndash;Munk mixing, the standard model for opaque paint films: each colour is converted to an absorption-over-scattering ratio, those are mixed in proportion, and the result converted back.</p>
         <p><strong>Still test a swatch.</strong> Proper Kubelka&ndash;Munk wants measured spectral data for each pigment. Working from three channels of an approximate tube colour is a coarse model, and it can't know your medium, your ground, or how thickly you paint. Treat a recipe as a reasoned starting point, not a formula.</p>
         <p><strong>Untick what you don't own.</strong> A recipe calling for a tube you don't have is useless. The search only uses ticked colours.</p>
+        <p><strong>The tray is for the part after the recipe.</strong> Press <em>use</em> on any suggestion to load it, then add a touch more white, try a third pigment, or build a colour the search never reached. The two halves of the well meet with no seam because colours are judged at their shared edge — a gap between them makes a near match look worse than it is.</p>
         <p>&Delta;E is how far the mix lands from the target: under 3 is indistinguishable, over 22 means your set genuinely cannot reach that colour and no mixing will get you there.</p>
+      </div>
+
+      <div id="tray">
+        <div class="well" id="trayWell">
+          <span class="half tgt" id="wellTarget"></span>
+          <span class="half mix" id="wellMix"></span>
+        </div>
+        <div class="welllabels">
+          <span id="wellTargetLab">target</span>
+          <span id="wellMixLab">tray</span>
+        </div>
+        <div id="trayVerdict"></div>
+        <div id="trayList"></div>
+        <div class="row" style="margin-top:9px;gap:6px">
+          <select id="trayAdd"><option value="">Add a colour…</option></select>
+          <button id="trayClear" style="flex:0 0 auto">Empty</button>
+        </div>
       </div>
 
       <div id="mixOut"><p class="empty">Tap <strong>mix</strong> on any colour to get a recipe.</p></div>
@@ -2372,6 +2460,8 @@ function renderMixer(){
     return;
   }
 
+  renderTray();
+
   const t0 = performance.now();
   const results = findRecipes(MIX.target);
   const ms = Math.round(performance.now() - t0);
@@ -2423,6 +2513,13 @@ function renderMixer(){
     v.className = "rverdict q-" + q;
     v.textContent = words + "  \u00b7  \u0394E " + r.dist.toFixed(1);
     lines.appendChild(v);
+
+    const use = document.createElement("button");
+    use.className = "use";
+    use.textContent = "use";
+    use.title = "Load this into the tray to adjust";
+    use.addEventListener("click", ()=>trayLoad(r.recipe));
+    lines.appendChild(use);
 
     card.appendChild(swatches);
     card.appendChild(lines);
@@ -2476,6 +2573,125 @@ function setMixSet(key){
   MIX.own = null;              // null means "all of them"
   renderInventory();
   renderMixer();
+}
+
+/* ============================================================
+   The tray
+   The recipe list answers "what should I mix". The tray is for
+   the part after that — adding a touch more white, seeing what a
+   third pigment does, working out a colour the search didn't
+   reach. It mixes through the same Kubelka-Munk model, so what
+   you see here is what the recipes are made of.
+   ============================================================ */
+
+const TRAY = { parts: [] };
+
+function trayColour(){
+  if(!TRAY.parts.length) return null;
+  const paints = ownedPaints();
+  const mix = [];
+  for(const t of TRAY.parts){
+    const p = paints.find(x => x.name === t.name);
+    if(p) mix.push({lin:p.lin, w:t.parts, s:p.s});
+  }
+  if(!mix.length) return null;
+  return toHex(...mixKM(mix));
+}
+
+function trayAdd(name){
+  const found = TRAY.parts.find(t => t.name === name);
+  if(found) found.parts++;
+  else TRAY.parts.push({name, parts:1});
+  renderTray();
+}
+
+function trayStep(name, delta){
+  const t = TRAY.parts.find(x => x.name === name);
+  if(!t) return;
+  t.parts += delta;
+  if(t.parts < 1) TRAY.parts = TRAY.parts.filter(x => x.name !== name);
+  renderTray();
+}
+
+function trayLoad(recipe){
+  TRAY.parts = recipe.map(r => ({name:r.name, parts:r.parts}));
+  renderTray();
+  $("tray").scrollIntoView({behavior:"smooth", block:"center"});
+}
+
+function renderTray(){
+  const paints = ownedPaints();
+
+  // the picker follows whichever set and inventory is active
+  const sel = $("trayAdd");
+  const keep = sel.value;
+  sel.innerHTML = '<option value="">Add a colour…</option>';
+  for(const p of paints){
+    const o = document.createElement("option");
+    o.value = p.name; o.textContent = p.name;
+    sel.appendChild(o);
+  }
+  sel.value = "";
+
+  const mixHex = trayColour();
+  const target = MIX.target;
+
+  $("wellTarget").style.background = target || "var(--ink-700)";
+  $("wellMix").style.background = mixHex || "var(--ink-700)";
+  $("wellTargetLab").textContent = target ? "target " + target : "no target";
+  $("wellMixLab").textContent = mixHex ? "tray " + mixHex : "tray empty";
+
+  const v = $("trayVerdict");
+  if(mixHex && target){
+    const d = labDist(rgb2lab(...hex2rgb(target)), rgb2lab(...hex2rgb(mixHex)));
+    const [words, q] = verdictFor(d);
+    v.className = "q-" + q;
+    v.textContent = words + "  \u00b7  \u0394E " + d.toFixed(1);
+  }else if(mixHex){
+    v.className = "";
+    v.textContent = "Tap mix on a colour to compare against a target.";
+  }else{
+    v.className = "";
+    v.textContent = "Add colours below, or press use on a recipe.";
+  }
+
+  const list = $("trayList");
+  list.innerHTML = "";
+  const total = TRAY.parts.reduce((a,b)=>a+b.parts, 0);
+
+  for(const t of TRAY.parts){
+    const p = paints.find(x => x.name === t.name);
+    const row = document.createElement("div");
+    row.className = "trayrow";
+
+    const chip = document.createElement("span");
+    chip.className = "traychip";
+    chip.style.background = p ? p.hex : "#000";
+
+    const nm = document.createElement("span");
+    nm.className = "trayname";
+    nm.textContent = t.name;
+
+    const minus = document.createElement("button");
+    minus.className = "traybtn"; minus.textContent = "\u2212";
+    minus.setAttribute("aria-label", "Less " + t.name);
+    minus.addEventListener("click", ()=>trayStep(t.name, -1));
+
+    const cnt = document.createElement("span");
+    cnt.className = "trayparts";
+    // parts and share both matter: 2 parts of 3 is a different
+    // thing from 2 parts of 12
+    cnt.textContent = t.parts + "  " + Math.round(t.parts / total * 100) + "%";
+
+    const plus = document.createElement("button");
+    plus.className = "traybtn"; plus.textContent = "+";
+    plus.setAttribute("aria-label", "More " + t.name);
+    plus.addEventListener("click", ()=>trayStep(t.name, 1));
+
+    row.appendChild(chip); row.appendChild(nm);
+    row.appendChild(minus); row.appendChild(cnt); row.appendChild(plus);
+    list.appendChild(row);
+  }
 }
 
 /* ============================================================
@@ -3648,6 +3864,12 @@ $("savePalImg").addEventListener("click", ()=>saveSheet(false));
   a.style.display = "";
 })();
 
+// tray
+$("trayAdd").addEventListener("change", e=>{
+  if(e.target.value) trayAdd(e.target.value);
+});
+$("trayClear").addEventListener("click", ()=>{ TRAY.parts = []; renderTray(); });
+
 // mixer
 $("mixset").addEventListener("change", e=>{ setMixSet(e.target.value); updateOwnCount(); });
 $("ownAll").addEventListener("click", ()=>{ MIX.own = null; renderInventory(); renderMixer(); updateOwnCount(); });
@@ -3661,6 +3883,7 @@ function updateOwnCount(){
 
 setMixSet("wnwinton");
 updateOwnCount();
+renderTray();
 
 // help panels
 document.querySelectorAll(".help").forEach(btn=>{
