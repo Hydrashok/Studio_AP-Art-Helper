@@ -372,6 +372,14 @@ footer .mark{
   color:var(--jade);
 }
 
+.headright{
+  display:flex;
+  align-items:center;
+  gap:16px;
+  flex-wrap:wrap;
+  padding-bottom:2px;
+}
+
 #donate{
   font-family:var(--ui);
   font-size:13px;
@@ -384,6 +392,11 @@ footer .mark{
   transition:background .12s ease;
 }
 #donate:hover{background:var(--jade-lit);}
+#donate{white-space:nowrap;flex:0 0 auto;}
+
+@media (max-width:620px){
+  .headright{width:100%;justify-content:space-between;gap:10px;}
+}
 
 footer .line{
   font-family:var(--display);
@@ -1214,7 +1227,10 @@ input[type=url]::placeholder{color:var(--ink-500);}
     <h1 id="brandTitle"></h1>
     <span class="byline" id="brandByline" style="display:none"></span>
   </div>
-  <span class="sub">palette, value and grid, from one photo</span>
+  <div class="headright">
+    <span class="sub">palette, value and grid, from one photo</span>
+    <a id="donate" href="#" target="_blank" rel="noopener noreferrer" style="display:none"></a>
+  </div>
 </header>
 <script>
 (function(){
@@ -1600,7 +1616,6 @@ input[type=url]::placeholder{color:var(--ink-500);}
 
 <footer>
   <span class="mark">Studio_AP</span>
-  <a id="donate" href="#" target="_blank" rel="noopener noreferrer" style="display:none"></a>
   <span class="line">Time is the currency of art.</span>
 </footer>
 
