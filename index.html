@@ -2407,27 +2407,40 @@ function findRecipes(targetHex){
   // one tube, straight from the tube
   for(const p of paints) consider([p], [T]);
 
-  // two tubes at every readable ratio
-  const pairSteps = partitions(T, 2);
-  for(let i=0;i<paints.length;i++){
-    for(let j=i+1;j<paints.length;j++){
-      for(const ps of pairSteps) consider([paints[i], paints[j]], ps);
-    }
-  }
-
-  // three tubes, but only from the most promising candidates —
-  // searching all triples is slow and mostly returns mud anyway
+  // Two tubes at every readable ratio — but not over the whole set.
+  // A 150-colour range gives 11,175 pairs, and searching them all
+  // froze the interface for over a second on a phone. Ranking first
+  // and pairing only among the closest candidates cuts that by an
+  // order of magnitude.
+  //
+  // Whites and blacks are kept regardless of rank: a tint or a shade
+  // needs them even when they sit nowhere near the target colour.
   const ranked = paints
     .map(p => ({p, d: labDist(targetLab, p.lab)}))
     .sort((a,b)=>a.d-b.d)
-    .slice(0, 10)
     .map(x => x.p);
 
+  const candidates = ranked.slice(0, 36);
+  for(const p of ranked){
+    if(candidates.length >= 46) break;
+    if(/white|black/i.test(p.name) && !candidates.includes(p)) candidates.push(p);
+  }
+
+  const pairSteps = partitions(T, 2);
+  for(let i=0;i<candidates.length;i++){
+    for(let j=i+1;j<candidates.length;j++){
+      for(const ps of pairSteps) consider([candidates[i], candidates[j]], ps);
+    }
+  }
+
+  // three tubes, from the ten most promising only — searching all
+  // triples is slow and mostly returns mud anyway
+  const tri = candidates.slice(0, 10);
   const triSteps = partitions(T, 3);
-  for(let i=0;i<ranked.length;i++)
-    for(let j=i+1;j<ranked.length;j++)
-      for(let k=j+1;k<ranked.length;k++)
-        for(const ps of triSteps) consider([ranked[i], ranked[j], ranked[k]], ps);
+  for(let i=0;i<tri.length;i++)
+    for(let j=i+1;j<tri.length;j++)
+      for(let k=j+1;k<tri.length;k++)
+        for(const ps of triSteps) consider([tri[i], tri[j], tri[k]], ps);
 
   found.sort((a,b)=>a.dist-b.dist);
 
